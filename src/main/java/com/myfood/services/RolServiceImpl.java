@@ -16,7 +16,7 @@ public class RolServiceImpl implements IRolService {
 	private IRolDAO rolDao;
 
 	@Override
-	public List<Role> getAllRoles() {
+	public List<Role> getAllRoles()  {
 		return rolDao.findAll();
 	}
 
@@ -40,4 +40,9 @@ public class RolServiceImpl implements IRolService {
 		rolDao.deleteById(id);
 	}
 
+	@Override
+	public Role findByName(String User) {
+		return rolDao.findByName(User);
+	}
+	
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myfood.dao.IUserDAO;
+import com.myfood.dto.Role;
 import com.myfood.dto.User;
 
 @Service
@@ -21,7 +22,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public Optional<User> getOneUser(Long id) {
+	public Optional<User> getOneUser(Long id){
 		return userDao.findById(id);
 	}
 
@@ -39,6 +40,7 @@ public class UserServiceImpl implements IUserService {
 	public void deleteUser(Long id) {
 		userDao.deleteById(id);
 	}
+
 	
 
 }
