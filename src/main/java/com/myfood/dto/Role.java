@@ -1,10 +1,16 @@
 package com.myfood.dto;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -25,12 +31,15 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
 	/** Name of the role. Must be unique and not null. */
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    private List<User> users;
+    
     /** Default constructor required by JPA. */
     public Role() {
     }
@@ -46,8 +55,12 @@ public class Role {
     public Role(Long id, String name) {
 		this.id = id;
 		this.name = name;
-
 	}
+    
+    public Role(String name) {
+    	this.name = name;
+    }
+    
     
 
     /**
@@ -85,6 +98,11 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
+
+	@Override
+	public String toString() {
+		return "Role [id=" + id + ", name=" + name + ", users=" + users + "]";
+	}
 
 
 }

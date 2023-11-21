@@ -1,14 +1,11 @@
 package com.myfood.dto;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -52,13 +49,21 @@ public class User {
 	* This field is mapped as a one-to-one relationship with the {@code Role} entity,
 	* and it includes cascading persistence to ensure the role is persisted along with the user.
 	*/
-	@OneToOne(targetEntity = Role.class, cascade = CascadeType.PERSIST)
+	@ManyToOne
 	private Role role;
 
 	/**
 	 * Default constructor for the {@code User} class.
 	 */
 	public User() {
+	}
+	
+	public User(Long id, String email, String password, String username) {
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.username = username;
+		this.role = new Role();
 	}
 
 	/**
@@ -166,5 +171,11 @@ public class User {
 	 */
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", username=" + username + ", role="
+				+ role + "]";
 	}
 }

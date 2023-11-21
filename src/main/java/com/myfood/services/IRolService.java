@@ -23,4 +23,7 @@ public interface IRolService {
 	
 	//Delete
 	public void deleteRole(Long id);
+	
+	// GelByName
+	public Role findByName(String User);
 }

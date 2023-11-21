@@ -7,5 +7,7 @@ import com.myfood.dto.Role;
 
 @Repository
 public interface IRolDAO extends JpaRepository<Role,Long> {
+	
+	public Role findByName(String User);
 
 }

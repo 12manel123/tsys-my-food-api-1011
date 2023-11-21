@@ -3,6 +3,7 @@ package com.myfood.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.myfood.dto.Role;
 import com.myfood.dto.User;
 
 public interface IUserService {
@@ -10,7 +11,7 @@ public interface IUserService {
 	//CRUD 
 
 	//Read All
-	public List<User> getAllUser();
+	public List<User> getAllUser() ;
 
 	//Read One
 	public Optional<User> getOneUser(Long id); 
@@ -23,4 +24,5 @@ public interface IUserService {
 
 	//Delete
 	public void deleteUser(Long id); 
+
 }
