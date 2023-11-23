@@ -16,4 +16,12 @@ public interface IOrderService {
     Order updateOrder(Order entity);
 
     void deleteOrder(Long id);
+    
+    Order markOrderAsMaked(Order entity);
+    
+    Order updateOrderSlot(Order entity);
+    
+    List<Order> getAllOrdersForCook();
+
+    List<Order> getAllOrdersForUser(Long userId);
 }
