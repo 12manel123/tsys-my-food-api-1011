@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myfood.dao.IUserDAO;
-import com.myfood.dto.Role;
 import com.myfood.dto.User;
-
 @Service
 public class UserServiceImpl implements IUserService {
 	

@@ -2,7 +2,9 @@ package com.myfood.controllers;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +58,6 @@ public class OrderController {
      */
     @GetMapping("/order/{id}")
     public ResponseEntity<Order> getOneOrder(@PathVariable(name = "id") Long id) {
-    	if (!orderService.getOneOrder(id).isPresent()) {
-    		return ResponseEntity.notFound().build();
-    	}
         Optional<Order> entity = orderService.getOneOrder(id);
         if (entity.isPresent()) {
             return ResponseEntity.ok(entity.get());
@@ -86,16 +85,16 @@ public class OrderController {
      * @return ResponseEntity containing the updated order or an error response.
      */
     @PutMapping("/order/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable(name = "id") Long id, @RequestBody Order entity) {
-    	if (!orderService.getOneOrder(id).isPresent()) {
-    		return ResponseEntity.notFound().build();
-    	}
+    public ResponseEntity<?> updateOrder(@PathVariable(name = "id") Long id, @RequestBody Order entity) {
+        Map<String, Object> responseData = new HashMap<String, Object>();
         Optional<Order> entityOld = orderService.getOneOrder(id);
         if (entityOld.isPresent()) {
             entity.setId(id);
-            return ResponseEntity.ok(orderService.updateOrder(entity));
+            responseData.put("Message: Updated order", entity);
+			return ResponseEntity.ok(responseData);
         } else {
-            return ResponseEntity.notFound().build();
+        	responseData.put("Message", "The order not exists");
+            return ResponseEntity.badRequest().body(responseData);
         }
     }
     
@@ -106,13 +105,16 @@ public class OrderController {
      * @return
      */
     @DeleteMapping("/order/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<?> deleteOrder(@PathVariable(name = "id") Long id) {
+        Map<String, Object> responseData = new HashMap<String, Object>();
         Optional<Order> entity = orderService.getOneOrder(id);
         if (entity.isPresent()) {
             orderService.deleteOrder(id);
-            return ResponseEntity.noContent().build();
+            responseData.put("Message", "Order deleted");
+			return ResponseEntity.status(204).body(responseData);
         } else {
-            return ResponseEntity.notFound().build();
+        	responseData.put("Message", "The order not exists");
+            return ResponseEntity.badRequest().body(responseData);
         }
     }
     
@@ -136,11 +138,10 @@ public class OrderController {
      */
     @GetMapping("/orders/user/{userId}")
     public ResponseEntity<List<OrderUserDTO>> getAllOrdersForUser(@PathVariable(name = "userId") Long userId) {
-        //TODO See the dishes related to the order
     	if (!userService.getOneUser(userId).isPresent()) {
     		return ResponseEntity.notFound().build();
     	}
-        List<OrderUserDTO> orderId = orderService.getAllOrdersForUser(userId)
+        List<OrderUserDTO> orderId = orderService.getAllOrdersForUserId(userId)
             .stream()
             .map(order -> new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()))
             .toList();
@@ -154,10 +155,8 @@ public class OrderController {
      * @return ResponseEntity containing the updated order or a 404 response if the order is not found.
      */
     @PutMapping("/order/markAsMaked/{id}")
-    public ResponseEntity<Order> markOrderAsMaked(@PathVariable(name = "id") Long id) {
-    	if (!orderService.getOneOrder(id).isPresent()) {
-    		return ResponseEntity.notFound().build();
-    	}
+    public ResponseEntity<?> markOrderAsMaked(@PathVariable(name = "id") Long id) {
+        Map<String, Object> responseData = new HashMap<String, Object>();
         Optional<Order> optionalOrder = orderService.getOneOrder(id);
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
@@ -165,7 +164,8 @@ public class OrderController {
             Order updatedOrder = orderService.updateOrder(order);
             return ResponseEntity.ok(updatedOrder);
         } else {
-            return ResponseEntity.notFound().build();
+        	responseData.put("Message", "The order not exists");
+            return ResponseEntity.badRequest().body(responseData);
         }
     }
  
@@ -182,20 +182,21 @@ public class OrderController {
             @PathVariable(name = "orderId") Long orderId,
             @PathVariable(name = "slotId") Long slotId) {
         //TODO: Set the total price for the dishes.
-    	if (!orderService.getOneOrder(orderId).isPresent()||!slotService.getOneSlot(slotId).isPresent()) {
-    		return ResponseEntity.notFound().build();
-    	}
         Optional<Order> optionalOrder = orderService.getOneOrder(orderId);
+        Map<String, Object> responseData = new HashMap<String, Object>();
+		
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
             if (order.getActualDate() != null) {
-                return ResponseEntity.badRequest().body("La orden ya ha sido confirmada y no se puede modificar.");
+            	responseData.put("Message", "Order is confirmed previosly");
+                return ResponseEntity.badRequest().body(responseData);
             }
             Optional<Slot> slotOptional = slotService.getOneSlot(slotId);
             if (slotOptional.isPresent()) {
                 Slot slot = slotOptional.get();
                 if (slot.getActual() >= slot.getLimitSlot()) {
-                    return ResponseEntity.badRequest().body("Demasiadas franjas para crear la orden");
+                	responseData.put("Message", "Too many orders for this slot to create order");
+                    return ResponseEntity.badRequest().body(responseData);
                 }
                 ZoneId madridZone = ZoneId.of("Europe/Madrid");
                 order.setActualDate(LocalDateTime.now(madridZone));
@@ -205,13 +206,14 @@ public class OrderController {
                 slotService.updateSlot(slot);
                 return ResponseEntity.accepted().body(order);
             } else {
-                // Maneja la lógica si el Slot no se encuentra
-                return ResponseEntity.badRequest().body("El slot no existe");
+            	responseData.put("Message", "The slot not exists");
+                return ResponseEntity.badRequest().body(responseData);
             }
         } else {
-            // Maneja la lógica si la orden no se encuentra
-            return ResponseEntity.badRequest().body("La orden no existe");
+        	responseData.put("Message", "The order not exists");
+            return ResponseEntity.badRequest().body(responseData);
         }
     }
+    
 
 }
