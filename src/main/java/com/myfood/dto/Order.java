@@ -16,8 +16,9 @@ public class Order {
     @Column(name = "maked", nullable = false)
     private boolean maked;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User userId;
 
     @ManyToOne
     @JoinColumn(name = "slot_id")
@@ -45,11 +46,11 @@ public class Order {
         this.maked = maked;
     }
 
-    public Long getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
     }
 
