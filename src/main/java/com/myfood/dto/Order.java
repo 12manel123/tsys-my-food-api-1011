@@ -18,7 +18,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "slot_id")
@@ -46,12 +46,12 @@ public class Order {
         this.maked = maked;
     }
 
-    public User getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Slot getSlot() {
@@ -83,7 +83,7 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", maked=" + maked +
-                ", userId=" + userId +
+                ", userId=" + user +
                 ", slot=" + slot +
                 ", totalPrice=" + totalPrice +
                 ", actualDate=" + actualDate +

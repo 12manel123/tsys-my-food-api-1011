@@ -57,7 +57,7 @@ public class User {
 	@ManyToOne
 	private Role role;
 	
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Order> orders;
 	

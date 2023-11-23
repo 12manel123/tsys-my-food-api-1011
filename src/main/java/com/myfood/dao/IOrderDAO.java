@@ -22,6 +22,7 @@ public interface IOrderDAO extends JpaRepository<Order, Long> {
      * @param userId The ID of the user for whom orders are retrieved.
      * @return List of Order entities for the specified user, ordered by actual date in descending order.
      */
-	List<Order> findAllByUserIdOrderByActualDateDesc(Long userId);
+	List<Order> findAllByUserIdOrderByActualDateDesc(Long id);
+	
 
 }

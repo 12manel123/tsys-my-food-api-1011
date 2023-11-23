@@ -56,8 +56,8 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public List<Order> getAllOrdersForUser(Long userId) {
-        return orderDAO.findAllByUserIdOrderByActualDateDesc(userId);
+    public List<Order> getAllOrdersForUserId(Long id) {
+        return orderDAO.findAllByUserIdOrderByActualDateDesc(id);
     }
 
 

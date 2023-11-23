@@ -3,7 +3,9 @@ package com.myfood.controllers;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -80,16 +82,15 @@ public class SlotController {
      * @return ResponseEntity containing the updated slot or a 404 response if not found.
      */
     @PutMapping("/slot/{id}")
-    public ResponseEntity<Slot> updateSlot(@PathVariable(name = "id") Long id, @RequestBody Slot entity) {
-    	if (!slotService.getOneSlot(id).isPresent()) {
-    		return ResponseEntity.notFound().build();
-    	}
+    public ResponseEntity<?> updateSlot(@PathVariable(name = "id") Long id, @RequestBody Slot entity) {
+		Map<String, Object> responseData = new HashMap<String, Object>();
         Optional<Slot> entityOld = slotService.getOneSlot(id);
         if (entityOld.isPresent()) {
             entity.setId(id);
             return ResponseEntity.ok(slotService.updateSlot(entity));
         } else {
-            return ResponseEntity.notFound().build();
+        	responseData.put("Message", "The slot not exists");
+            return ResponseEntity.badRequest().body(responseData);
         }
     }
 
@@ -100,16 +101,16 @@ public class SlotController {
      * @return ResponseEntity indicating the result of the delete operation.
      */
     @DeleteMapping("/slot/{id}")
-    public ResponseEntity<Void> deleteSlot(@PathVariable(name = "id") Long id) {
-    	if (!slotService.getOneSlot(id).isPresent()) {
-    		return ResponseEntity.notFound().build();
-    	}
+    public ResponseEntity<?> deleteSlot(@PathVariable(name = "id") Long id) {
+		Map<String, Object> responseData = new HashMap<String, Object>();
         Optional<Slot> entity = slotService.getOneSlot(id);
         if (entity.isPresent()) {
             slotService.deleteSlot(id);
-            return ResponseEntity.noContent().build();
+            responseData.put("Message", "Slot deleted");
+			return ResponseEntity.status(204).body(responseData);
         } else {
-            return ResponseEntity.notFound().build();
+        	responseData.put("Message", "The slot not exists");
+            return ResponseEntity.badRequest().body(responseData);
         }
     }
 
