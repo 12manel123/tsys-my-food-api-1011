@@ -1,5 +1,6 @@
 package com.myfood.controllers;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,11 +93,8 @@ public class Atribut_DishController {
 	}
 
 	private boolean isValidAtribut(String atribut) {
-		if ("CELIAC".equals(atribut) || "LACTOSE".equals(atribut) || "VEGAN".equals(atribut) || "VEGETARIAN".equals(atribut) || "NUTS".equals(atribut)) {
-			return true;
-		}
-		return false;
+		 String[] atributesValid = {"CELIAC", "LACTOSE", "VEGAN", "VEGETARIAN", "NUTS"};
+		 return Arrays.asList(atributesValid).contains(atribut);
 	}
-
 
 }

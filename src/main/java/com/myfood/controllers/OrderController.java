@@ -2,6 +2,7 @@ package com.myfood.controllers;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,15 @@ public class OrderController {
      * @return ResponseEntity containing a list of all orders.
      */
     @GetMapping("/orders")
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public ResponseEntity<?> getAllOrders() {
+    	  List<Order> listOrders = orderService.getAllOrders();
+    	  List<OrderUserDTO> listOrdersUserDTO = new ArrayList<>();
+    	  
+    	  for (Order orders : listOrders) {
+    		  listOrdersUserDTO.add(new OrderUserDTO( orders.getId(), orders.isMaked() , orders.getSlot()));
+		}
+    	  
+        return ResponseEntity.ok(listOrdersUserDTO);
     }
     
     /**

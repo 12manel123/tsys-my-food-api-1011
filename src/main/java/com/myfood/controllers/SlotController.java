@@ -122,7 +122,7 @@ public class SlotController {
     @GetMapping("/slots/available")
     public ResponseEntity<List<SlotUserDTO>> getAvailableSlots() {
         List<Slot> allSlots = slotService.getAllSlots();
-        List<Slot> availableSlots = allSlots.stream().filter(slot -> slot.getActual() < slot.getLimitSlot()).collect(Collectors.toList());
+        List<Slot> availableSlots = allSlots.stream().filter(slot -> slot.getActual() < slot.getLimitSlot()).toList();
         List<SlotUserDTO> slotId = new ArrayList<>();
         ZoneId madridZone = ZoneId.of("Europe/Madrid");
         LocalDateTime now = LocalDateTime.now(madridZone);
