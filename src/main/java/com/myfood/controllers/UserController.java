@@ -2,7 +2,6 @@ package com.myfood.controllers;
 
 import java.util.*;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,21 +19,30 @@ import com.myfood.dto.UserDTO;
 import com.myfood.services.IRolService;
 import com.myfood.services.IUserService;
 
+/**
+ * Controller class for handling user-related operations.
+ *
+ * This controller provides endpoints for basic CRUD operations on users.
+ *
+ * @RestController Indicates that this class is a Spring MVC Controller.
+ *                 @RequestMapping("/api/v1") Base mapping for all endpoints in
+ *                 this controller.
+ */
 @RestController
 @RequestMapping("api/v1")
 public class UserController {
 
 	@Autowired
 	private IUserService userServ;
-	
-	@Autowired 
+
+	@Autowired
 	private IRolService roleService;
 
 	/**
-    * Handles HTTP GET requests to retrieve a list of all users.
-    *
-    * @return ResponseEntity with a list of UserDTOs and an HTTP status code.
-    */
+	 * Retrieve all users with simplified DTO representation.
+	 *
+	 * @return ResponseEntity containing a list of UserDTO representing all users.
+	 */
 	@GetMapping("/users")
 	public ResponseEntity<List<UserDTO>> getAllUser() {
 		List<User> userList = userServ.getAllUser();
@@ -46,11 +54,12 @@ public class UserController {
 	}
 
 	/**
-    * Handles HTTP GET requests to retrieve a single user by ID.
-    *
-    * @param id The ID of the user to retrieve.
-    * @return ResponseEntity with a UserDTO and an HTTP status code.
-    */
+	 * Retrieve a specific user by its ID with simplified DTO representation.
+	 *
+	 * @param id The ID of the user to retrieve.
+	 * @return ResponseEntity containing the requested UserDTO or a 404 response if
+	 *         not found.
+	 */
 	@GetMapping("/user/{id}")
 	public ResponseEntity<UserDTO> getOneUser(@PathVariable(name = "id") Long id) {
 
@@ -69,21 +78,21 @@ public class UserController {
 	}
 
 	/**
-    * Handles HTTP POST requests to create a new user.
-    *
-    * @param entity The User object to be created.
-    * @return ResponseEntity with a success message or an error message along with an HTTP status code.
-    */
+	 * Create a new user. Assign the default role 'USER' if available.
+	 *
+	 * @param entity The user to be created.
+	 * @return ResponseEntity indicating success or an error response.
+	 */
 	@PostMapping("/user")
 	public ResponseEntity<?> saveUser(@RequestBody User entity) {
 		Map<String, Object> responseData = new HashMap<String, Object>();
-		
+
 		Role defaultRole = roleService.findByName("USER");
-		
+
 		if (defaultRole != null) {
 			entity.setRole(defaultRole);
 			userServ.createUser(entity);
-			
+
 			responseData.put("created user", entity.getUsername());
 
 			return ResponseEntity.ok(responseData);
@@ -93,12 +102,12 @@ public class UserController {
 	}
 
 	/**
-    * Handles HTTP PUT requests to update an existing user.
-    *
-    * @param id     The ID of the user to update.
-    * @param entity The updated User object.
-    * @return ResponseEntity with a success message or an error message along with an HTTP status code.
-    */
+	 * Update an existing user.
+	 *
+	 * @param id     The ID of the user to update.
+	 * @param entity The updated user.
+	 * @return ResponseEntity indicating success or a 404 response if not found.
+	 */
 	@PutMapping("/user/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id, @RequestBody User entity) {
 		Optional<User> entityOld = userServ.getOneUser(id);
@@ -108,7 +117,7 @@ public class UserController {
 			userServ.updateUser(entity);
 			Map<String, Object> responseData = new HashMap<String, Object>();
 			responseData.put("updated user", entity.getUsername());
-			
+
 			return ResponseEntity.ok(responseData);
 		} else {
 			return ResponseEntity.notFound().build();
@@ -116,11 +125,12 @@ public class UserController {
 	}
 
 	/**
-    * Handles HTTP DELETE requests to delete a user by ID.
-    *
-    * @param id The ID of the user to delete.
-    * @return ResponseEntity with a success message or an error message along with an HTTP status code.
-    */
+	 * Delete a user.
+	 *
+	 * @param id The ID of the user to delete.
+	 * @return ResponseEntity indicating success or a 404 response if the user is
+	 *         not found.
+	 */
 	@DeleteMapping("/user/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
 		Optional<User> entity = userServ.getOneUser(id);

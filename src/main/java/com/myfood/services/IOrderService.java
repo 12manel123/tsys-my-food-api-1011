@@ -24,4 +24,5 @@ public interface IOrderService {
     List<Order> getAllOrdersForCook();
 
     List<Order> getAllOrdersForUserId(Long id);
+
 }

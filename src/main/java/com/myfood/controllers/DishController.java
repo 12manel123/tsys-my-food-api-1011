@@ -13,18 +13,37 @@ import org.springframework.web.bind.annotation.*;
 import com.myfood.dto.Dish;
 import com.myfood.services.IDishService;
 
+/**
+ * Controller class for handling dish-related operations.
+ *
+ * This controller provides endpoints for basic CRUD operations on dishes.
+ *
+ * @RestController Indicates that this class is a Spring MVC Controller.
+ * @RequestMapping("/api/v1") Base mapping for all endpoints in this controller.
+ */
 @RestController
 @RequestMapping("api/v1")
 public class DishController {
 
 	@Autowired
 	private IDishService dishService;
-
+	
+	/**
+     * Retrieve all dishes.
+     *
+     * @return ResponseEntity containing a list of all dishes.
+     */
 	@GetMapping("/dishes")
 	public ResponseEntity<List<Dish>> getAllDishes() {
 		return ResponseEntity.ok(dishService.getAllDishes());
 	}
 
+	/**
+     * Retrieve a specific dish by its ID.
+     *
+     * @param id The ID of the dish to retrieve.
+     * @return ResponseEntity containing the requested dish or a 404 response if not found.
+     */
 	@GetMapping("/dish/{id}")
 	public ResponseEntity<Dish> getOneDish(@PathVariable(name = "id") Long id) {
 		Optional<Dish> entity = dishService.getOneDish(id);
@@ -35,6 +54,12 @@ public class DishController {
 		}
 	}
 
+	 /**
+     * Create a new dish.
+     *
+     * @param entity The dish to be created.
+     * @return ResponseEntity containing the created dish or an error response.
+     */
 	@PostMapping("/dish")
 	public ResponseEntity<?> saveDish(@RequestBody Dish entity) {
 
@@ -51,6 +76,13 @@ public class DishController {
 
 	}
 
+	/**
+     * Update an existing dish.
+     *
+     * @param id The ID of the dish to update.
+     * @param entity The updated dish.
+     * @return ResponseEntity containing the updated dish or an error response.
+     */
 	@PutMapping("/dish/{id}")
 	public ResponseEntity<?> updateDish(@PathVariable(name = "id") Long id, @RequestBody Dish entity) {
 
@@ -70,6 +102,12 @@ public class DishController {
 		}
 	}
 
+	/**
+     * Delete a dish.
+     *
+     * @param id The ID of the dish to delete.
+     * @return ResponseEntity indicating success or a 404 response if the dish is not found.
+     */
 	@DeleteMapping("/dish/{id}")
 	public ResponseEntity<Void> deleteOrder(@PathVariable(name = "id") Long id) {
 		Optional<Dish> entity = dishService.getOneDish(id);
@@ -81,6 +119,12 @@ public class DishController {
 		}
 	}
 
+	/**
+     * Check if the provided category is valid.
+     *
+     * @param category The category to validate.
+     * @return true if the category is valid, false otherwise.
+     */
 	private boolean isValidCategory(String category) {
 			String[] categoriesValid = {"APPETIZER", "FIRST", "SECOND", "DESSERT"};
 			 return Arrays.asList(categoriesValid).contains(category);
