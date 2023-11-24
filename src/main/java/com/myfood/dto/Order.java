@@ -1,6 +1,9 @@
 package com.myfood.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
@@ -29,6 +32,10 @@ public class Order {
 
     @Column(name = "actual_date")
     private LocalDateTime actualDate;
+    
+    @OneToMany(mappedBy = "order")
+    @JsonIgnore
+    private List<ListOrder> listOrder;
 
     public Long getId() {
         return id;

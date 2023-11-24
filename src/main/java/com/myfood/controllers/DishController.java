@@ -1,5 +1,6 @@
 package com.myfood.controllers;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,10 +82,9 @@ public class DishController {
 	}
 
 	private boolean isValidCategory(String category) {
-		if ("APPETIZER".equals(category) || "FIRST".equals(category) || "SECOND".equals(category) || "DESSERT".equals(category)) {
-			return true;
+			String[] categoriesValid = {"APPETIZER", "FIRST", "SECOND", "DESSERT"};
+			 return Arrays.asList(categoriesValid).contains(category);
 		}
-		return false;
 	}
 
-}
+

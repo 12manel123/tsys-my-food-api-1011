@@ -22,16 +22,16 @@ import com.myfood.services.IListOrderService;
 public class ListOrderController {
 	
 	@Autowired
-	private IListOrderService serv;
+	private IListOrderService listOrderserv;
 	
 	@GetMapping("/list-orders")
 	public ResponseEntity<List<ListOrder>> getAllListOrders(){
-	 return	ResponseEntity.ok(serv.getAllListOrders());
+	 return	ResponseEntity.ok(listOrderserv.getAllListOrders());
 	}
 	
 	@GetMapping("/list-order/{id}")
 	public ResponseEntity<ListOrder> getOneListOrder(@PathVariable(name = "id") Long id) { 
-		Optional<ListOrder> entity = serv.getOneListOrder(id);
+		Optional<ListOrder> entity = listOrderserv.getOneListOrder(id);
 		if (entity.isPresent()) {
 			return ResponseEntity.ok(entity.get());
 		} else {
@@ -41,15 +41,15 @@ public class ListOrderController {
 	
 	@PostMapping("/list-order")
 	public ResponseEntity<ListOrder> saveListOrder(@RequestBody ListOrder entity) {
-		return ResponseEntity.ok(serv.createListOrder(entity));
+		return ResponseEntity.ok(listOrderserv.createListOrder(entity));
 	}
 	
 	@PutMapping("/list-order/{id}")
 	public ResponseEntity<ListOrder> updateListOrder(@PathVariable(name = "id") Long id, @RequestBody ListOrder entity) {
-		Optional<ListOrder> entityOld = serv.getOneListOrder(id);
+		Optional<ListOrder> entityOld = listOrderserv.getOneListOrder(id);
 		if (entityOld.isPresent()) {
 			entity.setId(id);
-			return ResponseEntity.ok(serv.updateListOrder(entity));
+			return ResponseEntity.ok(listOrderserv.updateListOrder(entity));
 		} else {
 			return ResponseEntity.notFound().build();
 		}
@@ -57,9 +57,9 @@ public class ListOrderController {
 	
 	@DeleteMapping("/list-order/{id}")
 	public ResponseEntity<Void> deleteListOrder(@PathVariable(name = "id") Long id) { 
-		Optional<ListOrder> entity = serv.getOneListOrder(id);
+		Optional<ListOrder> entity = listOrderserv.getOneListOrder(id);
 		if (entity.isPresent()) {
-			serv.deleteListOrder(id);
+			listOrderserv.deleteListOrder(id);
 			return ResponseEntity.noContent().build();
 		} else {
 			return ResponseEntity.notFound().build();
