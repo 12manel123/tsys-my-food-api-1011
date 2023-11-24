@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
  * It is annotated with JPA annotations for entity mapping.
  *
  * @author David Maza
+ * @version 1.0
  */
 @Entity
 @Table(name = "users")

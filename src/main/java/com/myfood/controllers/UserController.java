@@ -30,8 +30,12 @@ public class UserController {
 	@Autowired 
 	private IRolService roleService;
 
+	/**
+    * Handles HTTP GET requests to retrieve a list of all users.
+    *
+    * @return ResponseEntity with a list of UserDTOs and an HTTP status code.
+    */
 	@GetMapping("/users")
-
 	public ResponseEntity<List<UserDTO>> getAllUser() {
 		List<User> userList = userServ.getAllUser();
 
@@ -41,6 +45,12 @@ public class UserController {
 		return ResponseEntity.ok(userListDTO);
 	}
 
+	/**
+    * Handles HTTP GET requests to retrieve a single user by ID.
+    *
+    * @param id The ID of the user to retrieve.
+    * @return ResponseEntity with a UserDTO and an HTTP status code.
+    */
 	@GetMapping("/user/{id}")
 	public ResponseEntity<UserDTO> getOneUser(@PathVariable(name = "id") Long id) {
 
@@ -58,6 +68,12 @@ public class UserController {
 		}
 	}
 
+	/**
+    * Handles HTTP POST requests to create a new user.
+    *
+    * @param entity The User object to be created.
+    * @return ResponseEntity with a success message or an error message along with an HTTP status code.
+    */
 	@PostMapping("/user")
 	public ResponseEntity<?> saveUser(@RequestBody User entity) {
 		Map<String, Object> responseData = new HashMap<String, Object>();
@@ -76,6 +92,13 @@ public class UserController {
 		return ResponseEntity.status(400).body(responseData);
 	}
 
+	/**
+    * Handles HTTP PUT requests to update an existing user.
+    *
+    * @param id     The ID of the user to update.
+    * @param entity The updated User object.
+    * @return ResponseEntity with a success message or an error message along with an HTTP status code.
+    */
 	@PutMapping("/user/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id, @RequestBody User entity) {
 		Optional<User> entityOld = userServ.getOneUser(id);
@@ -92,6 +115,12 @@ public class UserController {
 		}
 	}
 
+	/**
+    * Handles HTTP DELETE requests to delete a user by ID.
+    *
+    * @param id The ID of the user to delete.
+    * @return ResponseEntity with a success message or an error message along with an HTTP status code.
+    */
 	@DeleteMapping("/user/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
 		Optional<User> entity = userServ.getOneUser(id);

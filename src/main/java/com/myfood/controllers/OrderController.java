@@ -50,11 +50,9 @@ public class OrderController {
     public ResponseEntity<?> getAllOrders() {
     	  List<Order> listOrders = orderService.getAllOrders();
     	  List<OrderUserDTO> listOrdersUserDTO = new ArrayList<>();
-    	  
     	  for (Order orders : listOrders) {
-    		  listOrdersUserDTO.add(new OrderUserDTO( orders.getId(), orders.isMaked() , orders.getSlot()));
-		}
-    	  
+    		  listOrdersUserDTO.add(new OrderUserDTO(orders.getId(), orders.isMaked() , orders.getSlot()));
+		}	  
         return ResponseEntity.ok(listOrdersUserDTO);
     }
     
