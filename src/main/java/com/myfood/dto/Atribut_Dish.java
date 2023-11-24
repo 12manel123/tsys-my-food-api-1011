@@ -17,14 +17,14 @@ public class Atribut_Dish {
 	private Dish dish;
 	
 	@Column(name = "atributes", nullable = false)
-	private String Atributes;
+	private String atributes;
 
 	
-	public Atribut_Dish(Long id, Dish dish, String atributes) {
+	public Atribut_Dish(Long id, Dish dish, String atributes1) {
 	
 		this.id = id;
 		this.dish = dish;
-		Atributes = atributes;
+		atributes = atributes1;
 	}
 
 
@@ -43,11 +43,11 @@ public class Atribut_Dish {
 
 
 	public String getAtributes() {
-		return Atributes;
+		return atributes;
 	}
 
-	public void setAtributes(String atributes) {
-		Atributes = atributes;
+	public void setAtributes(String atributes1) {
+		atributes = atributes1;
 	}
 
 
@@ -63,7 +63,7 @@ public class Atribut_Dish {
 
 	@Override
 	public String toString() {
-		return "Atribut_Dish [id=" + id + ", dish=" + dish + ", Atributes=" + Atributes + "]";
+		return "Atribut_Dish [id=" + id + ", dish=" + dish + ", Atributes=" + atributes + "]";
 	}
 
 	

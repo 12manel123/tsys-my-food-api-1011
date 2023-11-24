@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myfood.dto.Role;
-import com.myfood.services.IRolService;
+import com.myfood.services.RolServiceImpl;
 
 /**
  * Controller class for handling role-related operations.
@@ -30,7 +30,7 @@ import com.myfood.services.IRolService;
 public class RolController {
 
 	@Autowired
-	private IRolService roleServ;
+	private RolServiceImpl roleServ;
 	
 	/**
      * Retrieve all roles.

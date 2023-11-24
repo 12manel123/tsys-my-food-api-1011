@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myfood.dto.Role;
 import com.myfood.dto.User;
 import com.myfood.dto.UserDTO;
-import com.myfood.services.IRolService;
-import com.myfood.services.IUserService;
+import com.myfood.services.RolServiceImpl;
+import com.myfood.services.UserServiceImpl;
 
 /**
  * Controller class for handling user-related operations.
@@ -33,10 +33,10 @@ import com.myfood.services.IUserService;
 public class UserController {
 
 	@Autowired
-	private IUserService userServ;
+	private UserServiceImpl userServ;
 	
 	@Autowired 
-	private IRolService roleService;
+	private RolServiceImpl roleService;
 
 	/**
      * Retrieve all users with simplified DTO representation.

@@ -23,6 +23,11 @@ public class Atribut_DishServiceImpl implements IAtribut_DishService{
     public Optional<Atribut_Dish> getOneAtribut_Dish(Long id) {
         return atribut_DishDAO.findById(id);
     }
+    
+    @Override
+    public List<Atribut_Dish> getAtributByAtributes(String atributes) {
+        return atribut_DishDAO.findByAtributes(atributes);
+    }
 
     @Override
     public Atribut_Dish createAtribut_Dish(Atribut_Dish entity) {
