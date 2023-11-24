@@ -3,7 +3,6 @@ package com.myfood.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.myfood.dto.Atribut_Dish;
 import com.myfood.dto.Dish;
 
 public interface IDishService {
