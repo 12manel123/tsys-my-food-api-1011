@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Slot;
 import com.myfood.dto.SlotUserDTO;
-import com.myfood.services.ISlotService;
+import com.myfood.services.SlotServiceImpl;
 
 /**
  * Controller class for handling slot-related operations.
@@ -31,7 +31,7 @@ import com.myfood.services.ISlotService;
 public class SlotController {
 
     @Autowired
-    private ISlotService slotService;
+    private SlotServiceImpl slotService;
 
     /**
      * Retrieve all slots.

@@ -10,6 +10,8 @@ public interface IAtribut_DishService {
 	List<Atribut_Dish> getAllAtribut_Dishes();
 
     Optional<Atribut_Dish> getOneAtribut_Dish(Long id);
+    
+    List<Atribut_Dish> getAtributByAtributes(String atributes);
 
     Atribut_Dish createAtribut_Dish(Atribut_Dish entity);
 

@@ -10,6 +10,10 @@ public interface IDishService {
 	List<Dish> getAllDishes();
 
     Optional<Dish> getOneDish(Long entity);
+    
+    Optional<Dish> getDishByName(String name);
+    
+    List<Dish> getDishesByCategory(String category);
 
     Dish createDish(Dish entity);
 

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Menu;
-import com.myfood.services.IMenuService;
+import com.myfood.services.MenuServiceImpl;
 
 /**
  * Controller class for handling menu-related operations.
@@ -23,7 +23,7 @@ import com.myfood.services.IMenuService;
 public class MenuController {
 
 	@Autowired
-	private IMenuService menuService;
+	private MenuServiceImpl menuService;
 
 	/**
      * Retrieve all menus.

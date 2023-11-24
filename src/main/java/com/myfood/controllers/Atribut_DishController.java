@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Atribut_Dish;
 import com.myfood.dto.Dish;
-import com.myfood.services.IAtribut_DishService;
-import com.myfood.services.IDishService;
+import com.myfood.services.Atribut_DishServiceImpl;
+import com.myfood.services.DishServiceImpl;
 
 
 /**
@@ -29,9 +29,9 @@ import com.myfood.services.IDishService;
 public class Atribut_DishController {
 
 	@Autowired
-	private IAtribut_DishService atribut_DishService;
+	private Atribut_DishServiceImpl atribut_DishService;
 	@Autowired
-	private IDishService dishService;
+	private DishServiceImpl dishService;
 	
 	/**
      * Retrieve all attribute-dish relationships.
@@ -58,6 +58,17 @@ public class Atribut_DishController {
 			return ResponseEntity.notFound().build();
 		}        
 	}
+	
+	@GetMapping("/atribut/ByAtribute/{atributes}")
+    public ResponseEntity<List<Atribut_Dish>> getAllAttributes(@PathVariable(name = "atributes") String atribute) {
+        List<Atribut_Dish> atributes = atribut_DishService.getAtributByAtributes(atribute);
+        if(!atributes.isEmpty()) {
+        	 return ResponseEntity.ok(atributes);
+        }else {
+	        return ResponseEntity.notFound().build();
+	    }
+    }
+
 
 	/**
      * Create a new attribute-dish relationship.
