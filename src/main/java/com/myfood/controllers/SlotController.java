@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Slot;
 import com.myfood.dto.SlotUserDTO;
-import com.myfood.services.ISlotService;
 import com.myfood.services.SlotServiceImpl;
 
 /**

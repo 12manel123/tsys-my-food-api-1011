@@ -23,6 +23,16 @@ public class DishServiceImpl implements IDishService {
 	    public Optional<Dish> getOneDish(Long id) {
 	        return dishDAO.findById(id);
 	    }
+	    
+	    @Override
+	    public Optional<Dish> getDishByName(String name) {
+	        return dishDAO.findByName(name);
+	    }
+	    
+	    @Override
+	    public List<Dish> getDishesByCategory(String category) {
+	        return dishDAO.findByCategory(category);
+	    }
 
 	    @Override
 	    public Dish createDish(Dish entity) {

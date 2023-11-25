@@ -14,8 +14,6 @@ import com.myfood.dto.Atribut_Dish;
 import com.myfood.dto.Dish;
 import com.myfood.services.Atribut_DishServiceImpl;
 import com.myfood.services.DishServiceImpl;
-import com.myfood.services.IAtribut_DishService;
-import com.myfood.services.IDishService;
 
 
 /**
@@ -60,6 +58,17 @@ public class AtributDishController {
 			return ResponseEntity.notFound().build();
 		}        
 	}
+	
+	@GetMapping("/atribut/ByAtribute/{atributes}")
+    public ResponseEntity<List<Atribut_Dish>> getAllAttributes(@PathVariable(name = "atributes") String atribute) {
+        List<Atribut_Dish> atributes = atribut_DishService.getAtributByAtributes(atribute);
+        if(!atributes.isEmpty()) {
+        	 return ResponseEntity.ok(atributes);
+        }else {
+	        return ResponseEntity.notFound().build();
+	    }
+    }
+
 
 	/**
      * Create a new attribute-dish relationship.

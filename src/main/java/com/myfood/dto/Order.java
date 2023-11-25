@@ -2,11 +2,16 @@ package com.myfood.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 
+/**
+ * The {@code Role} class represents a user in the system.
+ * It is annotated with JPA annotations for entity mapping.
+ *
+ * @author David Maza
+ * @version 1.0
+ */
 @Entity
 @Table(name = "orders")
 public class Order {

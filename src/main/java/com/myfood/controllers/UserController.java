@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myfood.dto.Role;
-import com.myfood.dto.Slot;
 import com.myfood.dto.User;
 import com.myfood.dto.UserDTO;
 import com.myfood.services.RolServiceImpl;
@@ -38,8 +37,8 @@ public class UserController {
 
 	@Autowired
 	private UserServiceImpl userServ;
-
-	@Autowired
+	
+	@Autowired 
 	private RolServiceImpl roleService;
 
 	/**

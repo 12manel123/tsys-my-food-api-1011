@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Dish;
 import com.myfood.services.DishServiceImpl;
-import com.myfood.services.IDishService;
 
 /**
  * Controller class for handling dish-related operations.
@@ -54,6 +53,27 @@ public class DishController {
 			return ResponseEntity.notFound().build();
 		}
 	}
+	
+	@GetMapping("/dish/byName/{name}")
+	public ResponseEntity<Dish> getDishByName(@PathVariable(name = "name") String name) {
+	    Optional<Dish> entity = dishService.getDishByName(name);
+	    if (entity.isPresent()) {
+	        return ResponseEntity.ok(entity.get());
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+	
+	@GetMapping("/dishes/byCategory/{category}")
+	public ResponseEntity<List<Dish>> getDishesByCategory(@PathVariable(name = "category") String category) {
+	    List<Dish> dishes = dishService.getDishesByCategory(category);
+	    if (!dishes.isEmpty()) {
+	        return ResponseEntity.ok(dishes);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
 
 	 /**
      * Create a new dish.
