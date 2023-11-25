@@ -3,16 +3,22 @@ package com.myfood.controllers;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.myfood.dto.Dish;
+import com.myfood.dto.ListOrder;
 import com.myfood.dto.Order;
+import com.myfood.dto.OrderCookDTO;
 import com.myfood.dto.OrderUserDTO;
 import com.myfood.dto.Slot;
 import com.myfood.dto.User;
@@ -44,18 +50,6 @@ public class OrderController {
     @Autowired
     private UserServiceImpl userService;
 
-    @Autowired
-    private SlotServiceImpl slotService;
-
-    @Autowired
-    private UserServiceImpl userService;
-
-//    FOR TESTING
-    
-//    @GetMapping("/orders")
-//    public ResponseEntity<List<Order>> getAllOrders() {
-//        return ResponseEntity.ok(orderService.getAllOrders());
-//    }
 
     /**
      * Retrieve all orders without user.
@@ -148,22 +142,58 @@ public class OrderController {
     }
 
     /**
-     * Retrieve all orders not marked as done. This function is intended for chefs.
+     * Retrieve all orders and dishes not marked as done. This function is intended for chefs.
      *
      * @return ResponseEntity containing a list of orders without user not marked as
      *         done.
      */
     @GetMapping("/orders/cook")
-    public ResponseEntity<List<OrderUserDTO>> getAllOrdersForCook() {
-        // TODO List of dishes
+    public ResponseEntity<List<OrderCookDTO>> getAllOrdersForCookDish() {
         List<Order> ordersForCook = orderService.getAllOrdersForCook();
-        List<OrderUserDTO> orderUserDTOList = ordersForCook.stream()
-                .filter(order -> order.getSlot() != null)
-                .map(order -> new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()))
-                .toList();
-        return ResponseEntity.ok(orderUserDTOList);
+        List<OrderCookDTO> orderCookDTOList = new ArrayList<>();
+
+        for (Order order : ordersForCook) {
+            // Verifica si actualDate es null antes de procesar la orden
+            if (order.getActualDate() != null) {
+                OrderCookDTO orderCookDTO = new OrderCookDTO();
+                orderCookDTO.setOrderId(order.getId());
+                orderCookDTO.setMaked(order.isMaked());
+                orderCookDTO.setSlot(order.getSlot());
+
+                // Obtiene la lista de platos asociados a la orden
+                List<ListOrder> listOrders = order.getListOrder();
+                List<Dish> dishes = listOrders.stream()
+                        .map(ListOrder::getDish)
+                        .collect(Collectors.toList());
+
+                // Obtiene los platos asociados al menú de la orden (evitando elementos nulos)
+                for (ListOrder listOrder : listOrders) {
+                    if (listOrder.getMenu() != null) {
+                        dishes.addAll(Arrays.asList(
+                                listOrder.getMenu().getAppetizer(),
+                                listOrder.getMenu().getFirst(),
+                                listOrder.getMenu().getSecond(),
+                                listOrder.getMenu().getDessert()
+                        ).stream()
+                                .filter(Objects::nonNull)  // Filtra elementos nulos
+                                .collect(Collectors.toList()));
+                    }
+                }
+
+                orderCookDTO.setDishes(dishes);
+
+                orderCookDTOList.add(orderCookDTO);
+            }
+        }
+
+        return ResponseEntity.ok(orderCookDTOList);
     }
 
+<<<<<<< HEAD
+=======
+
+    
+>>>>>>> 1d4f56a0a99d8f4e0ab744e71458ee310b720e67
     /**
      * Retrieve orders related to a user, showing only the slot and whether it is
      * done or not.
@@ -224,7 +254,10 @@ public class OrderController {
     public ResponseEntity<?> updateOrderSlot(
             @PathVariable(name = "orderId") Long orderId,
             @PathVariable(name = "slotId") Long slotId) {
+<<<<<<< HEAD
         // TODO TotalPrice with dishes of this order
+=======
+>>>>>>> 1d4f56a0a99d8f4e0ab744e71458ee310b720e67
         Optional<Order> optionalOrder = orderService.getOneOrder(orderId);
         Map<String, Object> responseData = new HashMap<>();
         if (optionalOrder.isPresent()) {
@@ -233,6 +266,13 @@ public class OrderController {
                 responseData.put("Message", "Order is confirmed previously");
                 return ResponseEntity.badRequest().body(responseData);
             }
+
+            // Verifica si la orden tiene al menos un ListOrder asociado
+            if (order.getListOrder() == null || order.getListOrder().isEmpty()) {
+                responseData.put("Message", "Order must have at least one ListOrder associated");
+                return ResponseEntity.badRequest().body(responseData);
+            }
+
             Optional<Slot> slotOptional = slotService.getOneSlot(slotId);
             if (slotOptional.isPresent()) {
                 Slot slot = slotOptional.get();
@@ -240,9 +280,14 @@ public class OrderController {
                     responseData.put("Message", "Too many orders for this slot to create order");
                     return ResponseEntity.badRequest().body(responseData);
                 }
+
+                // Calcula el totalPrice sumando los precios de los platos relacionados a la orden y los platos del menú
+                Double totalPrice = calculateTotalPrice(order);
+
                 ZoneId madridZone = ZoneId.of("Europe/Madrid");
                 order.setActualDate(LocalDateTime.now(madridZone));
                 order.setSlot(slot);
+                order.setTotalPrice(totalPrice); // Establece el totalPrice calculado
                 slot.setActual(slot.getActual() + 1);
                 orderService.updateOrder(order);
                 slotService.updateSlot(slot);
@@ -258,6 +303,39 @@ public class OrderController {
         }
     }
 
+    /**
+     * Calculate the total price by summing the prices of the dishes related to the order and the menu dishes.
+     *
+     * @param order The order for which to calculate the total price.
+     * @return The calculated total price.
+     */
+    private Double calculateTotalPrice(Order order) {
+        // Obtiene la lista de platos asociados a la orden
+        List<ListOrder> listOrders = order.getListOrder();
+        List<Dish> dishes = listOrders.stream()
+                .map(ListOrder::getDish)
+                .collect(Collectors.toList());
+
+        // Obtiene los platos asociados al menú de la orden (evitando elementos nulos)
+        List<Dish> menuDishes = listOrders.stream()
+                .map(listOrder -> listOrder.getMenu())
+                .filter(Objects::nonNull)
+                .flatMap(menu -> Arrays.asList(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert()).stream())
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        // Combina las listas de platos de la orden y del menú
+        List<Dish> allDishes = new ArrayList<>(dishes);
+        allDishes.addAll(menuDishes);
+
+        // Suma los precios de todos los platos
+        Double totalPrice = allDishes.stream()
+                .mapToDouble(Dish::getPrice)
+                .sum();
+
+        return totalPrice;
+    }
+    
     /**
      * Create a new order for a user with id of user.
      *

@@ -33,6 +33,16 @@ public class ListOrderServiceImpl implements IListOrderService {
 	}
 	@Override
 	public void deleteListOrder(Long id) {
-		dao.findById(id);		
+		dao.deleteById(id);		
 	}
+	
+	@Override
+	public Optional<ListOrder> getListOrderByOrderAndMenu(Long orderId, Long menuId) {
+        return dao.findByOrderIdAndMenuId(orderId, menuId);
+    }
+	
+	@Override
+    public Optional<ListOrder> getListOrderByOrderAndDish(Long orderId, Long dishId) {
+        return dao.findByOrderIdAndDishId(orderId, dishId);
+    }
 }

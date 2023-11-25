@@ -47,6 +47,5 @@ public class OrderUserDTO {
 		return "OrderUserDTO [id=" + id + ", maked=" + maked + ", slot=" + slot + "]";
 	}
 	
-    
 
 }

@@ -104,5 +104,4 @@ public class Role {
 		return "Role [id=" + id + ", name=" + name + ", users=" + users + "]";
 	}
 
-
 }
