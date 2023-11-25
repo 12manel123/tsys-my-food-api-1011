@@ -22,6 +22,7 @@ import com.myfood.dto.OrderCookDTO;
 import com.myfood.dto.OrderUserDTO;
 import com.myfood.dto.Slot;
 import com.myfood.dto.User;
+import com.myfood.dto.UserDTO;
 import com.myfood.services.OrderServiceImpl;
 import com.myfood.services.SlotServiceImpl;
 import com.myfood.services.UserServiceImpl;
@@ -305,6 +306,7 @@ public class OrderController {
         List<ListOrder> listOrders = order.getListOrder();
         List<Dish> dishes = listOrders.stream()
                 .map(ListOrder::getDish)
+                .filter(Objects::nonNull)  // Filtra elementos nulos
                 .collect(Collectors.toList());
 
         // Obtiene los platos asociados al menú de la orden (evitando elementos nulos)
@@ -314,6 +316,8 @@ public class OrderController {
                 .flatMap(menu -> Arrays.asList(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert()).stream())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+        System.out.println("Dishes: " + dishes);
+        System.out.println("Menu Dishes: " + menuDishes);
 
         // Combina las listas de platos de la orden y del menú
         List<Dish> allDishes = new ArrayList<>(dishes);
@@ -345,5 +349,73 @@ public class OrderController {
         Order savedOrder = orderService.createOrder(order);
         OrderUserDTO orderUserDTO = new OrderUserDTO(savedOrder.getId(), savedOrder.isMaked(), savedOrder.getSlot());
         return ResponseEntity.ok(orderUserDTO);
+    }
+    
+    /**
+     * Retrieve orders for a specific year, month, and day.
+     *
+     * This endpoint returns a list of orders that have an actualDate matching the provided year, month, and day.
+     *
+     * @param year  The year for filtering orders.
+     * @param month The month for filtering orders (1 for January, 2 for February, etc.).
+     * @param day   The day of the month for filtering orders.
+     * @return ResponseEntity containing a list of OrderUserDTO representing the orders for the specified year, month, and day.
+     */
+    @GetMapping("/orders/date/{year}/{month}/{day}")
+    public ResponseEntity<List<OrderUserDTO>> getOrdersByYearMonthAndDay(
+            @PathVariable(name = "year") int year,
+            @PathVariable(name = "month") int month,
+            @PathVariable(name = "day") int day) {
+        List<Order> listOrders = orderService.getAllOrders();
+        List<OrderUserDTO> listOrdersUserDTO = new ArrayList<>();
+        for (Order order : listOrders) {
+            LocalDateTime actualDate = order.getActualDate();
+            if (actualDate != null && actualDate.getYear() == year && actualDate.getMonthValue() == month && actualDate.getDayOfMonth() == day) {
+                listOrdersUserDTO.add(new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()));
+            }
+        }
+        return ResponseEntity.ok(listOrdersUserDTO);
+    }
+    
+    /**
+     * Retrieve all orders made in a specific year and month.
+     *
+     * @param year  The year for which to retrieve orders.
+     * @param month The month for which to retrieve orders (1 for January, 2 for February, etc.).
+     * @return ResponseEntity containing a list of OrderUserDTO representing the orders made in the specified year and month without user.
+     */
+    @GetMapping("/orders/date/{year}/{month}")
+    public ResponseEntity<List<OrderUserDTO>> getOrdersByYearAndMonth(
+            @PathVariable(name = "year") int year,
+            @PathVariable(name = "month") int month) {
+        List<Order> listOrders = orderService.getAllOrders();
+        List<OrderUserDTO> listOrdersUserDTO = new ArrayList<>();
+        for (Order order : listOrders) {
+            LocalDateTime actualDate = order.getActualDate();
+            if (actualDate != null && actualDate.getYear() == year && actualDate.getMonthValue() == month) {
+                listOrdersUserDTO.add(new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()));
+            }
+        }
+        return ResponseEntity.ok(listOrdersUserDTO);
+    }
+    
+    /**
+     * Retrieve all orders made in a specific year.
+     *
+     * @param year  The year for which to retrieve orders.
+     * @return ResponseEntity containing a list of OrderUserDTO representing the orders made in the specified year and month without user.
+     */
+    @GetMapping("/orders/date/{year}")
+    public ResponseEntity<List<OrderUserDTO>> getOrdersByYear(
+            @PathVariable(name = "year") int year) {
+        List<Order> listOrders = orderService.getAllOrders();
+        List<OrderUserDTO> listOrdersUserDTO = new ArrayList<>();
+        for (Order order : listOrders) {
+            LocalDateTime actualDate = order.getActualDate();
+            if (actualDate != null && actualDate.getYear() == year) {
+                listOrdersUserDTO.add(new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()));
+            }
+        }
+        return ResponseEntity.ok(listOrdersUserDTO);
     }
 }

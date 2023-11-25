@@ -1,5 +1,6 @@
 package com.myfood.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import com.myfood.dto.Dish;
 import com.myfood.dto.ListOrder;
 import com.myfood.dto.Menu;
 import com.myfood.dto.Order;
+import com.myfood.dto.OrderUserDTO;
+import com.myfood.dto.UserDTO;
 import com.myfood.services.DishServiceImpl;
 import com.myfood.services.ListOrderServiceImpl;
 import com.myfood.services.MenuServiceImpl;
@@ -73,6 +76,8 @@ public class ListOrderController {
 	public ResponseEntity<ListOrder> getOneListOrder(@PathVariable(name = "id") Long id) { 
 		Optional<ListOrder> entity = listOrderserv.getOneListOrder(id);
 		if (entity.isPresent()) {
+			ListOrder listOrder = entity.get();
+	        listOrder.getOrder().getUser().setPassword(null);
 			return ResponseEntity.ok(entity.get());
 		} else {
 			return ResponseEntity.notFound().build();
@@ -87,6 +92,7 @@ public class ListOrderController {
      */
 	@PostMapping("/list-order")
 	public ResponseEntity<ListOrder> saveListOrder(@RequestBody ListOrder entity) {
+	    entity.getOrder().getUser().setPassword(null);
 		return ResponseEntity.ok(listOrderserv.createListOrder(entity));
 	}
 	
@@ -101,6 +107,7 @@ public class ListOrderController {
 	public ResponseEntity<ListOrder> updateListOrder(@PathVariable(name = "id") Long id, @RequestBody ListOrder entity) {
 		Optional<ListOrder> entityOld = listOrderserv.getOneListOrder(id);
 		if (entityOld.isPresent()) {
+			entity.getOrder().getUser().setPassword(null);
 			entity.setId(id);
 			return ResponseEntity.ok(listOrderserv.updateListOrder(entity));
 		} else {
@@ -129,7 +136,13 @@ public class ListOrderController {
 	}
 	
 	
-	
+	/**
+	 * Saves a relationship between an order and a menu in the list of orders.
+	 *
+	 * @param orderid Identifier of the order.
+	 * @param menuid Identifier of the menu.
+	 * @return ResponseEntity with the created ListOrder, or ResponseEntity.notFound() if the order or menu does not exist.
+	 */
 	@PostMapping("/list-order/menu/{orderid}/{menuid}")
 	public ResponseEntity<ListOrder> saveListOrderMenu(
             @PathVariable(name = "orderid") Long orderid,
@@ -140,16 +153,23 @@ public class ListOrderController {
         if (orderOptional.isPresent() && menuOptional.isPresent()) {
             Order order = orderOptional.get();
             Menu menu = menuOptional.get();
-
             ListOrder listOrder = new ListOrder();
             listOrder.setOrder(order);
             listOrder.setMenu(menu);
-
+            listOrder.getOrder().getUser().setPassword(null);
             return ResponseEntity.ok(listOrderserv.createListOrder(listOrder));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+	
+	/**
+	 * Saves a relationship between an order and a dish in the list of orders.
+	 *
+	 * @param orderid Identifier of the order.
+	 * @param dishid Identifier of the dish.
+	 * @return ResponseEntity with the created ListOrder, or ResponseEntity.notFound() if the order or dish does not exist.
+	 */
 	@PostMapping("/list-order/dish/{orderid}/{dishid}")
 	public ResponseEntity<ListOrder> saveListOrderDish(
             @PathVariable(name = "orderid") Long orderid,
@@ -160,17 +180,23 @@ public class ListOrderController {
         if (orderOptional.isPresent() && dishOptional.isPresent()) {
             Order order = orderOptional.get();
             Dish dish = dishOptional.get();
-
             ListOrder listOrder = new ListOrder();
             listOrder.setOrder(order);
             listOrder.setDish(dish);
-
+            listOrder.getOrder().getUser().setPassword(null);
             return ResponseEntity.ok(listOrderserv.createListOrder(listOrder));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 	
+	/**
+	 * Deletes a relationship between an order and a menu from the list of orders.
+	 *
+	 * @param orderid Identifier of the order.
+	 * @param menuid Identifier of the menu.
+	 * @return Accepted ResponseEntity with a message indicating successful deletion, or ResponseEntity.badRequest() if the relationship does not exist.
+	 */
 	@DeleteMapping("/list-order/menu/{orderid}/{menuid}")
     public ResponseEntity<?> deleteListOrderMenu(
             @PathVariable(name = "orderid") Long orderid,
@@ -187,6 +213,13 @@ public class ListOrderController {
         }
     }
 	
+	/**
+	 * Deletes a relationship between an order and a dish from the list of orders.
+	 *
+	 * @param orderid Identifier of the order.
+	 * @param dishid Identifier of the dish.
+	 * @return ResponseEntity with no content if deletion is successful, or ResponseEntity.notFound() if the relationship does not exist.
+	 */
 	@DeleteMapping("/list-order/dish/{orderid}/{dishid}")
     public ResponseEntity<Void> deleteListOrderDish(
             @PathVariable(name = "orderid") Long orderid,
