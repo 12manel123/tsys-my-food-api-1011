@@ -33,6 +33,7 @@ public class DishServiceImpl implements IDishService {
 	    public List<Dish> getDishesByCategory(String category) {
 	        return dishDAO.findByCategory(category);
 	    }
+	    
 
 	    @Override
 	    public Dish createDish(Dish entity) {

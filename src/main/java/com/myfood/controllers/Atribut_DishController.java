@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +69,28 @@ public class Atribut_DishController {
 	        return ResponseEntity.notFound().build();
 	    }
     }
+	
+	@GetMapping("/atribut/visibleByAtribute/{atributes}")
+	public ResponseEntity<List<Dish>> getAllVisibleAttributes(@PathVariable(name = "atributes") String atribute) {
+	    List<Atribut_Dish> atributDishes = atribut_DishService.getAtributByAtributes(atribute);
+
+	    List<Dish> visibleDishes = atributDishes
+	            .stream()
+	            .map(Atribut_Dish::getDish)
+	            .filter(Dish::isVisible)
+	            .collect(Collectors.toList());
+
+	    if (!visibleDishes.isEmpty()) {
+	        return ResponseEntity.ok(visibleDishes);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
+	
+
+
+
 
 
 	/**

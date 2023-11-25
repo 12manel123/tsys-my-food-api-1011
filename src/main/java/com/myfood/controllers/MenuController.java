@@ -1,12 +1,17 @@
 package com.myfood.controllers;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.myfood.dto.Dish;
 import com.myfood.dto.Menu;
 import com.myfood.services.MenuServiceImpl;
 
@@ -35,6 +40,27 @@ public class MenuController {
 		return ResponseEntity.ok(menuService.getAllMenus());
 	}
 
+	
+	@GetMapping("/allVisibleMenus")
+	public ResponseEntity<List<Menu>> getAllVisibleMenus() {
+	    List<Menu> visibleMenus = menuService.getAllMenus()
+	            .stream()
+	            .filter(this::isMenuVisible)
+	            .collect(Collectors.toList());
+
+	    return visibleMenus.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(visibleMenus);
+	}
+
+	private boolean isMenuVisible(Menu menu) {
+	    return menu.isVisible() &&
+	            allDishesVisible(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert());
+	}
+
+	private boolean allDishesVisible(Dish... dishes) {
+	    return Arrays.stream(dishes).allMatch(dish -> dish != null && dish.isVisible());
+	}
+
+	
 	/**
      * Retrieve a specific menu by its ID.
      *
@@ -79,6 +105,25 @@ public class MenuController {
 			return ResponseEntity.notFound().build();
 		}
 	}
+	
+	@PutMapping("/menu/changeVisibility/{id}")
+	public ResponseEntity<?> toggleMenuVisibility(@PathVariable(name = "id") Long id) {
+	    Optional<Menu> existingMenu = menuService.getOneMenu(id);
+
+	    if (existingMenu.isPresent()) {
+	        Menu menuToUpdate = existingMenu.get();
+	        menuToUpdate.setVisible(!menuToUpdate.isVisible());  // Cambia el estado visible a su opuesto
+	        menuService.updateMenu(menuToUpdate);
+	        String visibilityStatus = menuToUpdate.isVisible() ? "visible" : "not visible";
+	        return ResponseEntity.ok("Menu visibility status with ID " + id + " changed to " + visibilityStatus);
+	        } else {
+	        Map<String, Object> rest = new HashMap<>();
+	        rest.put("Error", "Menu with id " + id + " not found");
+	        return ResponseEntity.status(404).body(rest);
+	    }
+	}
+
+
 
 	/**
      * Delete a menu.
