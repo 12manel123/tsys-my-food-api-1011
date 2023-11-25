@@ -33,6 +33,10 @@ public class Dish {
 	@OneToMany(mappedBy = "dish")
 	@JsonIgnore
 	private List<Atribut_Dish> atribut_dish;
+	
+	@OneToMany(mappedBy = "dish")
+    @JsonIgnore
+    private List<ListOrder> listOrder;
 		
 
 	public Dish(Long id, String name, String description, String image, double price, String category) {
