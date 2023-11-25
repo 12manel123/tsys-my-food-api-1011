@@ -33,7 +33,7 @@ public class Order {
     @Column(name = "actual_date")
     private LocalDateTime actualDate;
     
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<ListOrder> listOrder;
 
@@ -85,7 +85,15 @@ public class Order {
         this.actualDate = actualDate;
     }
 
-    @Override
+    public List<ListOrder> getListOrder() {
+		return listOrder;
+	}
+
+	public void setListOrder(List<ListOrder> listOrder) {
+		this.listOrder = listOrder;
+	}
+
+	@Override
     public String toString() {
         return "Order{" +
                 "id=" + id +

@@ -16,4 +16,8 @@ public interface IListOrderService {
     ListOrder updateListOrder(ListOrder entity);
 
     void deleteListOrder(Long id);
+    
+    Optional<ListOrder> getListOrderByOrderAndMenu(Long orderId, Long menuId);
+    
+    Optional<ListOrder> getListOrderByOrderAndDish(Long orderId, Long dishId);
 }
