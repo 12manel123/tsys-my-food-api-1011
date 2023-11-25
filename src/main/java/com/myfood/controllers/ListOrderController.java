@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myfood.dto.ListOrder;
 import com.myfood.services.IListOrderService;
+import com.myfood.services.ListOrderServiceImpl;
 
 /**
  * Controller class for handling list-order-related operations.
@@ -30,7 +31,7 @@ import com.myfood.services.IListOrderService;
 public class ListOrderController {
 	
 	@Autowired
-	private IListOrderService listOrderserv;
+	private ListOrderServiceImpl listOrderserv;
 	
 	/**
      * Retrieve all list orders.

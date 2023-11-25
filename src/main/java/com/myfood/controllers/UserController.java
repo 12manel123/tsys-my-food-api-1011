@@ -1,6 +1,9 @@
 package com.myfood.controllers;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myfood.dto.Role;
+import com.myfood.dto.Slot;
 import com.myfood.dto.User;
 import com.myfood.dto.UserDTO;
-import com.myfood.services.IRolService;
-import com.myfood.services.IUserService;
+import com.myfood.services.RolServiceImpl;
+import com.myfood.services.UserServiceImpl;
 
 /**
  * Controller class for handling user-related operations.
@@ -33,10 +37,10 @@ import com.myfood.services.IUserService;
 public class UserController {
 
 	@Autowired
-	private IUserService userServ;
+	private UserServiceImpl userServ;
 
 	@Autowired
-	private IRolService roleService;
+	private RolServiceImpl roleService;
 
 	/**
 	 * Retrieve all users with simplified DTO representation.
@@ -117,7 +121,6 @@ public class UserController {
 			userServ.updateUser(entity);
 			Map<String, Object> responseData = new HashMap<String, Object>();
 			responseData.put("updated user", entity.getUsername());
-
 			return ResponseEntity.ok(responseData);
 		} else {
 			return ResponseEntity.notFound().build();
@@ -131,17 +134,18 @@ public class UserController {
 	 * @return ResponseEntity indicating success or a 404 response if the user is
 	 *         not found.
 	 */
-	@DeleteMapping("/user/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
-		Optional<User> entity = userServ.getOneUser(id);
-		if (entity.isPresent()) {
-			userServ.deleteUser(id);
-			Map<String, Object> responseData = new HashMap<String, Object>();
-			responseData.put("delete user:", id);
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
+    	Map<String, Object> responseData = new HashMap<String, Object>();
+    	Optional<User> entity = userServ.getOneUser(id);
+        if (entity.isPresent()) {
+        	userServ.deleteUser(id);  
+        	 responseData.put("Message", "User deleted");
 			return ResponseEntity.status(204).body(responseData);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
-	}
+        } else {
+        	responseData.put("Message", "The User not exists");
+        	return ResponseEntity.badRequest().body(responseData);
+        }
+    }
 
 }

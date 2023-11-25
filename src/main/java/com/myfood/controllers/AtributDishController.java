@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Atribut_Dish;
 import com.myfood.dto.Dish;
+import com.myfood.services.Atribut_DishServiceImpl;
+import com.myfood.services.DishServiceImpl;
 import com.myfood.services.IAtribut_DishService;
 import com.myfood.services.IDishService;
 
@@ -26,12 +28,12 @@ import com.myfood.services.IDishService;
  */
 @RestController
 @RequestMapping("api/v1")
-public class Atribut_DishController {
+public class AtributDishController {
 
 	@Autowired
-	private IAtribut_DishService atribut_DishService;
+	private Atribut_DishServiceImpl atribut_DishService;
 	@Autowired
-	private IDishService dishService;
+	private DishServiceImpl dishService;
 	
 	/**
      * Retrieve all attribute-dish relationships.

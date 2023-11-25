@@ -19,6 +19,9 @@ import com.myfood.dto.User;
 import com.myfood.services.IOrderService;
 import com.myfood.services.ISlotService;
 import com.myfood.services.IUserService;
+import com.myfood.services.OrderServiceImpl;
+import com.myfood.services.SlotServiceImpl;
+import com.myfood.services.UserServiceImpl;
 
 /**
  * Controller class for handling order-related operations.
@@ -36,30 +39,27 @@ import com.myfood.services.IUserService;
 public class OrderController {
 
     @Autowired
-    private IOrderService orderService;
+    private OrderServiceImpl orderService;
 
     @Autowired
-    private ISlotService slotService;
+    private SlotServiceImpl slotService;
 
     @Autowired
-    private IUserService userService;
+    private UserServiceImpl userService;
 
-    /**
-     * Retrieve all orders.
-     *
-     * @return ResponseEntity containing a list of all orders.
-     */
-    @GetMapping("/orders")
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
-    }
+//    FOR TESTING
+    
+//    @GetMapping("/orders")
+//    public ResponseEntity<List<Order>> getAllOrders() {
+//        return ResponseEntity.ok(orderService.getAllOrders());
+//    }
 
     /**
      * Retrieve all orders without user.
      *
      * @return ResponseEntity containing a list of all orders.
      */
-    @GetMapping("/orders/user")
+    @GetMapping("/orders")
     public ResponseEntity<?> getAllOrdersUser() {
         List<Order> listOrders = orderService.getAllOrders();
         List<OrderUserDTO> listOrdersUserDTO = new ArrayList<>();

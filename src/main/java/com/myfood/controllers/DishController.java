@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Dish;
+import com.myfood.services.DishServiceImpl;
 import com.myfood.services.IDishService;
 
 /**
@@ -26,7 +27,7 @@ import com.myfood.services.IDishService;
 public class DishController {
 
 	@Autowired
-	private IDishService dishService;
+	private DishServiceImpl dishService;
 	
 	/**
      * Retrieve all dishes.

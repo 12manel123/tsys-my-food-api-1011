@@ -96,4 +96,18 @@ public class Order {
                 ", actualDate=" + actualDate +
                 '}';
     }
+
+	/**
+	 * @return the listOrder
+	 */
+	public List<ListOrder> getListOrder() {
+		return listOrder;
+	}
+
+	/**
+	 * @param listOrder the listOrder to set
+	 */
+	public void setListOrder(List<ListOrder> listOrder) {
+		this.listOrder = listOrder;
+	}
 }

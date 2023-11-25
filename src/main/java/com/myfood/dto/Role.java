@@ -37,7 +37,7 @@ public class Role {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL )
     private List<User> users;
     
     /** Default constructor required by JPA. */
