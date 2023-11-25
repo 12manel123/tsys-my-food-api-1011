@@ -44,18 +44,7 @@ public class OrderController {
     @Autowired
     private UserServiceImpl userService;
 
-    @Autowired
-    private SlotServiceImpl slotService;
 
-    @Autowired
-    private UserServiceImpl userService;
-
-//    FOR TESTING
-    
-//    @GetMapping("/orders")
-//    public ResponseEntity<List<Order>> getAllOrders() {
-//        return ResponseEntity.ok(orderService.getAllOrders());
-//    }
 
     /**
      * Retrieve all orders without user.
