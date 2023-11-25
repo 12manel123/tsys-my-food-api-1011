@@ -1,5 +1,6 @@
 package com.myfood.services;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,11 @@ public class RolServiceImpl implements IRolService {
 	@Override
 	public Role findByName(String User) {
 		return rolDao.findByName(User);
+	}
+	
+	public boolean isValidRole(String role) {
+		String[] roleValid = {"USER", "CHEF", "ADMIN"};
+		 return Arrays.asList(roleValid).contains(role);
 	}
 	
 }

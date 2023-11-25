@@ -1,5 +1,6 @@
 package com.myfood.dto;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -98,11 +99,11 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
+    
 
 	@Override
 	public String toString() {
 		return "Role [id=" + id + ", name=" + name + ", users=" + users + "]";
 	}
-
 
 }

@@ -1,6 +1,8 @@
 package com.myfood.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +67,13 @@ public class RolController {
      * @return ResponseEntity containing the created role.
      */
 	@PostMapping("/role")
-	public ResponseEntity<Role> saveRole(@RequestBody Role entity) {
-		return ResponseEntity.ok(roleServ.createRole(entity));
+	public ResponseEntity<?> saveRole(@RequestBody Role entity) {
+		Map<String, Object> responseData = new HashMap<String, Object>();
+		
+		return roleServ.isValidRole(entity.getName())
+		 ? ResponseEntity.ok(roleServ.createRole(entity))
+		 : ResponseEntity.status(400).body(responseData.put("Error", "The 'Role' field only accepts the strings 'USER' , 'CHEF' or 'ADMIN'"));
+		
 	}
 	
 	/**
@@ -79,7 +86,7 @@ public class RolController {
 	@PutMapping("/role/{id}")
 	public ResponseEntity<Role> updateRole(@PathVariable(name = "id") Long id, @RequestBody Role entity) {
 		Optional<Role> entityOld = roleServ.getOneRole(id);
-		if (entityOld.isPresent()) {
+		if (entityOld.isPresent()&& roleServ.isValidRole(entity.getName())) {
 			entity.setId(id);
 			return ResponseEntity.ok(roleServ.updateRole(entity));
 		} else {
