@@ -1,5 +1,6 @@
 package com.myfood.controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +39,12 @@ public class DishController {
 	public ResponseEntity<List<Dish>> getAllDishes() {
 		return ResponseEntity.ok(dishService.getAllDishes());
 	}
-
+	
+	/**
+	 * Retrieve all visible dishes.
+	 *
+	 * @return ResponseEntity containing a list of all visible dishes or a 404 response if none are found.
+	 */
 	@GetMapping("/dishes/visible")
 	public ResponseEntity<List<Dish>> getVisibleDishes() {
 		List<Dish> visibleDishes = dishService.getAllDishes()
@@ -69,30 +75,51 @@ public class DishController {
 		}
 	}
 
-	@GetMapping("/dish/byName/{name}")
-	public ResponseEntity<Dish> getDishByName(@PathVariable(name = "name") String name) {
-		Optional<Dish> entity = dishService.getDishByName(name);
-		if (entity.isPresent()) {
-			return ResponseEntity.ok(entity.get());
-		} else {
-			return ResponseEntity.notFound().build();
+	/**
+	 * Retrieve dishes by name, considering case-insensitive matching.
+	 *
+	 * @param name The name of the dishes to retrieve.
+	 * @return ResponseEntity containing a list of dishes matching the provided name or a 404 response if none are found.
+	 */
+	@GetMapping("/dish/ByName/{name}")
+	public ResponseEntity<List<Dish>> getDishByName(@PathVariable(name = "name") String name) {
+		List<Dish> allDishes = dishService.getAllDishes();
+		List<Dish> filteredDishes = new ArrayList<>();
+		for (Dish dish : allDishes) {
+			if (dish.getName().toLowerCase().contains(name.toLowerCase())) {
+				filteredDishes.add(dish);
+	        }
 		}
+		return ResponseEntity.ok(filteredDishes);
 	}
-
-	@GetMapping("/dishes/visibleByName/{name}")
-	public ResponseEntity<List<Dish>> getVisibleDishesByName(@PathVariable(name = "name") String name) {
-		List<Dish> visibleDishes = dishService.getDishByName(name)
+	
+	/**
+	 * Retrieve visible dishes by name, considering case-insensitive matching.
+	 *
+	 * @param name The name of the dishes to retrieve.
+	 * @return ResponseEntity containing a list of visible dishes matching the provided name or a 404 response if none are found.
+	 */
+	@GetMapping("/dish/visibleByName/{name}")
+	public ResponseEntity<List<Dish>> getDishByNameVisible(@PathVariable(name = "name") String name) {
+		List<Dish> allDishes = dishService.getAllDishes()
 				.stream()
-				.filter(Dish::isVisible) // Filtra los platos cuyo estado visible es true
-				.collect(Collectors.toList());
-
-		if (!visibleDishes.isEmpty()) {
-			return ResponseEntity.ok(visibleDishes);
-		} else {
-			return ResponseEntity.notFound().build();
+				.filter(Dish::isVisible)
+				.collect(Collectors.toList());;
+		List<Dish> filteredDishes = new ArrayList<>();
+		for (Dish dish : allDishes) {
+			if (dish.getName().toLowerCase().contains(name.toLowerCase())) {
+				filteredDishes.add(dish);
+	        }
 		}
+		return ResponseEntity.ok(filteredDishes);
 	}
 
+	/**
+	 * Retrieve dishes by category.
+	 *
+	 * @param category The category of dishes to retrieve.
+	 * @return ResponseEntity containing a list of dishes in the specified category or a 404 response if none are found.
+	 */
 	@GetMapping("/dishes/byCategory/{category}")
 	public ResponseEntity<List<Dish>> getDishesByCategory(@PathVariable(name = "category") String category) {
 		List<Dish> dishes = dishService.getDishesByCategory(category);
@@ -103,6 +130,12 @@ public class DishController {
 		}
 	}
 
+	/**
+	 * Retrieve visible dishes by category.
+	 *
+	 * @param category The category of dishes to retrieve.
+	 * @return ResponseEntity containing a list of visible dishes in the specified category or a 404 response if none are found.
+	 */
 	@GetMapping("/dishes/visibleByCategory/{category}")
 	public ResponseEntity<List<Dish>> getVisibleDishesByCategory(@PathVariable(name = "category") String category) {
 		List<Dish> visibleDishes = dishService.getDishesByCategory(category)
@@ -165,6 +198,12 @@ public class DishController {
 		}
 	}
 
+	/**
+	 * Change the visibility status of a dish.
+	 *
+	 * @param id The ID of the dish to update.
+	 * @return ResponseEntity indicating the success of the visibility change or an error response if the dish is not found.
+	 */
 	@PutMapping("/dish/changeVisibility/{id}")
 	public ResponseEntity<?> changeDishVisibility(@PathVariable(name = "id") Long id) {
 		Map<String, Object> rest = new HashMap<>();
