@@ -47,7 +47,7 @@ public class User {
 	/**
 	 * The username of the user. It cannot be null.
 	 */
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", unique = true, nullable = false)
 	private String username;
 	
 	/**

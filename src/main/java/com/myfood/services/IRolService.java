@@ -1,5 +1,8 @@
 package com.myfood.services;
-
+/**
+ * @author Davi Maza
+ *
+ */
 import java.util.List;
 import java.util.Optional;
 
@@ -25,5 +28,5 @@ public interface IRolService {
 	public void deleteRole(Long id);
 	
 	// GelByName
-	public Role findByName(String User);
+	public Optional<Role> findByName(String User);
 }

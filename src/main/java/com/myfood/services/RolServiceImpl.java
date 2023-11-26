@@ -1,5 +1,8 @@
 package com.myfood.services;
-
+/**
+ * @author Davi Maza
+ *
+ */
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -41,14 +44,22 @@ public class RolServiceImpl implements IRolService {
 		rolDao.deleteById(id);
 	}
 
-	@Override
-	public Role findByName(String User) {
-		return rolDao.findByName(User);
-	}
+
 	
+	/**
+     * Check if the provided Role is valid.
+     *
+     * @param category The Role to validate.
+     * @return true if the Role is valid, false otherwise.
+     */
 	public boolean isValidRole(String role) {
 		String[] roleValid = {"USER", "CHEF", "ADMIN"};
 		 return Arrays.asList(roleValid).contains(role);
+	}
+
+	@Override
+	public Optional<Role> findByName(String User) {
+		return rolDao.findByName(User);
 	}
 	
 }

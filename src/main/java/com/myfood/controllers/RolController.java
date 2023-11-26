@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,7 @@ public class RolController {
 	*
 	* @return ResponseEntity with a list of roles and an HTTP status code.
 	*/
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/roles")
 	public ResponseEntity<List<Role>> getAllRole() {
 		return ResponseEntity.ok(roleServ.getAllRoles());
@@ -50,6 +52,7 @@ public class RolController {
      * @param id The ID of the role to retrieve.
      * @return ResponseEntity containing the requested role or a 404 response if not found.
      */
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/role/{id}")
 	public ResponseEntity<Role> getOneRole(@PathVariable(name = "id") Long id) { 
 		Optional<Role> entity = roleServ.getOneRole(id);
@@ -66,6 +69,7 @@ public class RolController {
      * @param entity The role to be created.
      * @return ResponseEntity containing the created role.
      */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/role")
 	public ResponseEntity<?> saveRole(@RequestBody Role entity) {
 		Map<String, Object> responseData = new HashMap<String, Object>();
@@ -83,6 +87,7 @@ public class RolController {
      * @param entity The updated role.
      * @return ResponseEntity containing the updated role or a 404 response if not found.
      */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/role/{id}")
 	public ResponseEntity<Role> updateRole(@PathVariable(name = "id") Long id, @RequestBody Role entity) {
 		Optional<Role> entityOld = roleServ.getOneRole(id);
@@ -100,6 +105,7 @@ public class RolController {
      * @param id The ID of the role to delete.
      * @return ResponseEntity indicating success or a 404 response if the role is not found.
      */
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/role/{id}")
 	public ResponseEntity<Void> deleteRole(@PathVariable(name = "id") Long id) { 
 		Optional<Role> entity = roleServ.getOneRole(id);
@@ -110,5 +116,5 @@ public class RolController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
+		
 }

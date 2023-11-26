@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,7 @@ public class UserController {
 	 *
 	 * @return ResponseEntity containing a list of UserDTO representing all users.
 	 */
+	
 	@GetMapping("/users")
 	public ResponseEntity<List<UserDTO>> getAllUser() {
 		List<User> userList = userServ.getAllUser();
@@ -90,7 +92,7 @@ public class UserController {
 	public ResponseEntity<?> saveUser(@RequestBody User entity) {
 		Map<String, Object> responseData = new HashMap<String, Object>();
 
-		Role defaultRole = roleService.findByName("USER");
+		Role defaultRole = roleService.findByName("USER").get();
 
 		if (defaultRole != null) {
 			entity.setRole(defaultRole);
@@ -100,7 +102,7 @@ public class UserController {
 
 			return ResponseEntity.ok(responseData);
 		}
-		responseData.put("message", "you must first create the USER role before adding a user");
+		responseData.put("Error", "you must first create the USER role before adding a user");
 		return ResponseEntity.status(400).body(responseData);
 	}
 
@@ -142,7 +144,7 @@ public class UserController {
         	 responseData.put("Message", "User deleted");
 			return ResponseEntity.status(204).body(responseData);
         } else {
-        	responseData.put("Message", "The User not exists");
+        	responseData.put("Error", "The User not exists");
         	return ResponseEntity.badRequest().body(responseData);
         }
     }
