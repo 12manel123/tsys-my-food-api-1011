@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.myfood.dao.IOrderDAO;
@@ -59,6 +61,12 @@ public class OrderServiceImpl implements IOrderService {
     public List<Order> getAllOrdersForUserId(Long id) {
         return orderDAO.findAllByUserIdOrderByActualDateDesc(id);
     }
+
+	public Page<Order> getAllOrdersWithPagination(Pageable pageable) {
+	    return orderDAO.findAll(pageable);
+	}
+    
+    
 
 
 }
