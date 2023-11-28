@@ -2,6 +2,8 @@ package com.myfood.dao;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,5 +26,6 @@ public interface IOrderDAO extends JpaRepository<Order, Long> {
      */
 	List<Order> findAllByUserIdOrderByActualDateDesc(Long id);
 	
+    Page<Order> findAll(Pageable pageable);	
 
 }
