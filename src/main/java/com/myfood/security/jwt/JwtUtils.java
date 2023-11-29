@@ -3,7 +3,6 @@ package com.myfood.security.jwt;
  * @author Davi Maza
  *
  */
-
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
@@ -22,10 +21,10 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Component
-public class JwtTokenProvider {
+public class JwtUtils {
 	
 	// Get logger
-    private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${jwt.secret.key}")
     private String secretKey;

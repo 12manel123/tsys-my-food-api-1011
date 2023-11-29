@@ -1,5 +1,8 @@
 package com.myfood.controllers;
-
+/**
+ * @author David Maza
+ *
+ */
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,7 @@ import com.myfood.dto.User;
 import com.myfood.dto.auth.JwtResponse;
 import com.myfood.dto.auth.LoginRequest;
 import com.myfood.dto.auth.SignupRequest;
-import com.myfood.security.jwt.JwtTokenProvider;
+import com.myfood.security.jwt.JwtUtils;
 import com.myfood.security.service.UserDetailsImpl;
 import com.myfood.services.RolServiceImpl;
 import com.myfood.services.UserServiceImpl;
@@ -42,7 +45,7 @@ public class AuthController {
 	@Autowired
 	private PasswordEncoder encoder;
 	@Autowired
-	private JwtTokenProvider jwtUtils;
+	private JwtUtils jwtUtils;
 
 
 	@PostMapping("/signin")
@@ -88,8 +91,4 @@ public class AuthController {
 		return ResponseEntity.ok("User created!");
 	}
 	
-	public  UserDetailsImpl  getUserDetails() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return (UserDetailsImpl) authentication.getPrincipal();
-	}
 }

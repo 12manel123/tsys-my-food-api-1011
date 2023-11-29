@@ -12,6 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  * The {@code User} class represents a user in the system.
@@ -35,19 +38,25 @@ public class User {
 	/**
 	 * The email address of the user. It is unique and cannot be null.
 	 */
-	@Column(name = "email", unique = true, nullable = false)
+	@Email
+	@NotBlank
+	@Size(max = 80)
+	@Column(name = "email", unique = true)
 	private String email;
 	
 	/**
 	 * The password associated with the user. It cannot be null.
 	 */
-	@Column(name = "password", nullable = false)
+	@NotBlank
+	@Column(name = "password")
 	private String password;
 	
 	/**
 	 * The username of the user. It cannot be null.
 	 */
-	@Column(name = "name", unique = true, nullable = false)
+	@NotBlank
+	@Size(max = 60)
+	@Column(name = "name", unique = true)
 	private String username;
 	
 	/**

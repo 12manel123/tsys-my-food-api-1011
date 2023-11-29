@@ -3,7 +3,6 @@ package com.myfood.security;
  * @author David Maza
  *
  */
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,40 +21,31 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.myfood.security.jwt.AuthEntryPointJwt;
-import com.myfood.security.jwt.JwtAuthenticationFilter;
+import com.myfood.security.jwt.JwtAuthorizationFilter;
 import com.myfood.security.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
-	
-	// Dependency injection UserDetailsServiceImpl
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
 
-	// Dependency injection AuthEntryPointJwt
 	@Autowired
 	private AuthEntryPointJwt unauthorizedHandler;
 	
-
-	// Token filter bean
 	@Bean
-	JwtAuthenticationFilter authenticationJwtTokenFilter() {
-		return new JwtAuthenticationFilter();
+	JwtAuthorizationFilter authenticationJwtTokenFilter() {
+		return new JwtAuthorizationFilter();
 	}
 
-	// Authentication provider bean
 	@Bean
 	DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
 		authProvider.setUserDetailsService(userDetailsService);
 		authProvider.setPasswordEncoder(passwordEncoder());
-
 		return authProvider;
 	}
-	
 	
 	@Bean
 	AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -72,17 +62,17 @@ public class WebSecurityConfig {
    CorsConfigurationSource corsConfigurationSource() {
     	
         CorsConfiguration configuration = new CorsConfiguration();
-        
-        configuration.addAllowedOrigin("*");      // Allow all origins or Arrays.asList("http://localhost:4200","/*")
+        configuration.addAllowedOrigin("*");      // Allow all origins or Arrays.asList("http://localhost:4200","http://localhost:3000")
         configuration.addAllowedMethod("*");      // Allow all methods or List.of("GET", "POST", "PUT", "DELETE")
         configuration.addAllowedHeader("*");      // Allow all headers
         configuration.setAllowCredentials(true);  // Allow sending of authentication cookies
-        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+    
 
+    // Security Filter Chain
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http ,  AuthenticationManager authenticationManager) throws Exception {
 

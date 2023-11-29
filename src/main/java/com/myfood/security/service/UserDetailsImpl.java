@@ -1,5 +1,4 @@
 package com.myfood.security.service;
-
 /**
  * @author Davi Maza
  *
@@ -38,7 +37,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	public static UserDetailsImpl build(User user) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+		authorities.add(new SimpleGrantedAuthority("ROLE_".concat(user.getRole().getName()) ) );
 		return new UserDetailsImpl( user.getId().intValue(), user.getUsername(), user.getPassword(), authorities);
 	}
 

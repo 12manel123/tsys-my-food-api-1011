@@ -1,7 +1,8 @@
 package com.myfood.dto.auth;
-
-
-
+/**
+ * @author David Maza
+ *
+ */
 public class SignupRequest  {
 
 	private String email;

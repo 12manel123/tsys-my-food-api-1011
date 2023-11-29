@@ -1,5 +1,8 @@
 package com.myfood.dto.auth;
-
+/**
+ * @author David Maza
+ *
+ */
 import java.util.List;
 
 public class JwtResponse {
@@ -17,7 +20,6 @@ public class JwtResponse {
 	 * @param username
 	 */
 	public JwtResponse(String token, String username, Integer userid, List<String> roles) {
-		super();
 		this.token = token;
 		this.type = "Bearer";
 		this.username = username;

@@ -3,7 +3,6 @@ package com.myfood.security.jwt;
  * @author Davi Maza
  *
  */
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,29 +17,19 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- * Authentication entry point for handling unauthorized access.
- * This class implements the {@link org.springframework.security.web.AuthenticationEntryPoint} interface.
- * It is responsible for handling authentication errors and providing a customized response to the client.
- */
+
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
 	/**
-    * Called when an unauthorized request is detected.
-    * Generates a customized JSON response and sets the appropriate status code in the HttpServletResponse.
-    *
-    * @param request        The HttpServletRequest representing the incoming request.
-    * @param response       The HttpServletResponse representing the outgoing response.
-    * @param authException  The AuthenticationException that triggered the unauthorized access.
-    * @throws IOException      If an I/O error occurs during the writing of the response.
-    * @throws ServletException If a servlet-specific error occurs.
-    */
+     * Method called when authentication fails. This method handles
+     * building and sending a custom response with details about the error.
+     */
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException authException) throws IOException, ServletException {
+		AuthenticationException authException) throws IOException, ServletException {
 		logger.error("Unauthorized error: {}", authException.getMessage());
 
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);

@@ -1,5 +1,8 @@
 package com.myfood.security.service;
-
+/**
+ * @author David Maza
+ *
+ */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,10 +12,7 @@ import org.springframework.stereotype.Service;
 import com.myfood.dao.IUserDAO;
 
 
-/**
- * @author Davi Maza
- *
- */
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
