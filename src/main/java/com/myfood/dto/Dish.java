@@ -39,6 +39,10 @@ public class Dish {
 	private List<Atribut_Dish> atribut_dish;
 	
 	@OneToMany(mappedBy = "dish")
+	@JsonIgnore
+	private List<Menu> menu;
+	
+	@OneToMany(mappedBy = "dish")
     @JsonIgnore
     private List<ListOrder> listOrder;
 
