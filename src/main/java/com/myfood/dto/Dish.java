@@ -38,9 +38,9 @@ public class Dish {
 	@JsonIgnore
 	private List<Atribut_Dish> atribut_dish;
 	
-	@OneToMany(mappedBy = "dish")
-	@JsonIgnore
-	private List<Menu> menu;
+	@ManyToOne
+	@JoinColumn(name = "menu_id")
+	private Menu menu;
 	
 	@OneToMany(mappedBy = "dish")
     @JsonIgnore

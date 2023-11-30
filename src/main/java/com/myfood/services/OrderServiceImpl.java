@@ -62,6 +62,7 @@ public class OrderServiceImpl implements IOrderService {
         return orderDAO.findAllByUserIdOrderByActualDateDesc(id);
     }
 
+    @Override
 	public Page<Order> getAllOrdersWithPagination(Pageable pageable) {
 	    return orderDAO.findAll(pageable);
 	}

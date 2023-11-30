@@ -9,10 +9,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Dish;
+import com.myfood.dto.Order;
+import com.myfood.dto.OrderUserDTO;
 import com.myfood.services.DishServiceImpl;
 
 /**
@@ -36,28 +42,39 @@ public class DishController {
 	 * @return ResponseEntity containing a list of all dishes.
 	 */
 	@GetMapping("/dishes")
-	public ResponseEntity<List<Dish>> getAllDishes() {
-		return ResponseEntity.ok(dishService.getAllDishes());
+	public ResponseEntity<Page<Dish>> getAllDishes(
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size) {
+	    Pageable pageable = PageRequest.of(page, size);
+	    Page<Dish> dishPage = dishService.getAllDishesWithPagination(pageable);
+	    return ResponseEntity.ok(dishPage);
 	}
 	
-	/**
-	 * Retrieve all visible dishes.
-	 *
-	 * @return ResponseEntity containing a list of all visible dishes or a 404 response if none are found.
-	 */
+	
 	@GetMapping("/dishes/visible")
-	public ResponseEntity<List<Dish>> getVisibleDishes() {
-		List<Dish> visibleDishes = dishService.getAllDishes()
-				.stream()
-				.filter(Dish::isVisible) // Filtra los platos cuyo estado visible es true
-				.collect(Collectors.toList());
+	public ResponseEntity<Page<Dish>> getVisibleDishes(
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size) {
+	    Pageable pageable = PageRequest.of(page, size);
 
-		if (!visibleDishes.isEmpty()) {
-			return ResponseEntity.ok(visibleDishes);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+	    List<Dish> allDishes = dishService.getAllDishes();
+	    List<Dish> visibleDishes = allDishes.stream()
+	            .filter(Dish::isVisible)
+	            .collect(Collectors.toList());
+
+	    int start = (int) pageable.getOffset();
+	    int end = Math.min((start + pageable.getPageSize()), visibleDishes.size());
+	    List<Dish> paginatedDishes = visibleDishes.subList(start, end);
+
+	    Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, visibleDishes.size());
+
+	    if (!paginatedDishes.isEmpty()) {
+	        return ResponseEntity.ok(dishPage);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
+
 
 	/**
 	 * Retrieve a specific dish by its ID.
@@ -121,14 +138,23 @@ public class DishController {
 	 * @return ResponseEntity containing a list of dishes in the specified category or a 404 response if none are found.
 	 */
 	@GetMapping("/dishes/byCategory/{category}")
-	public ResponseEntity<List<Dish>> getDishesByCategory(@PathVariable(name = "category") String category) {
-		List<Dish> dishes = dishService.getDishesByCategory(category);
-		if (!dishes.isEmpty()) {
-			return ResponseEntity.ok(dishes);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+	public ResponseEntity<Page<Dish>> getDishesByCategory(
+	        @PathVariable(name = "category") String category,
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size) {
+
+	    Pageable pageable = PageRequest.of(page, size);
+	    List<Dish> dishes = dishService.getDishesByCategory(category);
+
+	    int start = (int) pageable.getOffset();
+	    int end = Math.min((start + pageable.getPageSize()), dishes.size());
+	    List<Dish> paginatedDishes = dishes.subList(start, end);
+
+	    Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, dishes.size());
+
+	    return ResponseEntity.ok(dishPage);
 	}
+
 
 	/**
 	 * Retrieve visible dishes by category.
@@ -137,18 +163,30 @@ public class DishController {
 	 * @return ResponseEntity containing a list of visible dishes in the specified category or a 404 response if none are found.
 	 */
 	@GetMapping("/dishes/visibleByCategory/{category}")
-	public ResponseEntity<List<Dish>> getVisibleDishesByCategory(@PathVariable(name = "category") String category) {
-		List<Dish> visibleDishes = dishService.getDishesByCategory(category)
-				.stream()
-				.filter(Dish::isVisible) // Filtra los platos cuyo estado visible es true
-				.collect(Collectors.toList());
+	public ResponseEntity<Page<Dish>> getVisibleDishesByCategory(
+	        @PathVariable(name = "category") String category,
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size) {
 
-		if (!visibleDishes.isEmpty()) {
-			return ResponseEntity.ok(visibleDishes);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+	    List<Dish> allDishes = dishService.getDishesByCategory(category);
+
+	    List<Dish> visibleDishes = allDishes.stream()
+	            .filter(Dish::isVisible)
+	            .collect(Collectors.toList());
+
+	    Pageable pageable = PageRequest.of(page, size);
+	    int start = (int) pageable.getOffset();
+	    int end = Math.min((start + pageable.getPageSize()), visibleDishes.size());
+	    List<Dish> paginatedDishes = visibleDishes.subList(start, end);
+
+	    Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, visibleDishes.size());
+
+	    return paginatedDishes.isEmpty()
+	            ? ResponseEntity.notFound().build()
+	            : ResponseEntity.ok(dishPage);
 	}
+
+
 
 	/**
 	 * Create a new dish.

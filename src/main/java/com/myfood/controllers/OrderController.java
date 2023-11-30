@@ -56,17 +56,18 @@ public class OrderController {
      * @see OrderService#getAllOrdersWithPagination(Pageable)
      */
     @GetMapping("/orders")
-    public ResponseEntity<?> getAllOrders(
+    public ResponseEntity<Page<OrderUserDTO>> getAllOrders(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-         Pageable pageable = PageRequest.of(page, size);
-          Page<Order> ordersPage = orderService.getAllOrdersWithPagination(pageable);
-    	  List<OrderUserDTO> listOrdersUserDTO = new ArrayList<>();
-    	  for (Order orders : ordersPage) {
-    		  listOrdersUserDTO.add(new OrderUserDTO( orders.getId(), orders.isMaked() , orders.getSlot()));
-    	  }
-    	  
-        return ResponseEntity.ok(listOrdersUserDTO);
+        List<Order> allOrders = orderService.getAllOrders();
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> paginatedOrders = paginate(allOrders, pageable);
+
+        List<OrderUserDTO> orderUserDTOList = paginatedOrders.getContent().stream()
+                .map(order -> new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new PageImpl<>(orderUserDTOList, pageable, paginatedOrders.getTotalElements()));
     }
     
     /**

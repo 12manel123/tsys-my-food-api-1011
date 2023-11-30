@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myfood.dao.IMenuDAO;
@@ -39,4 +41,9 @@ public class MenuServiceImpl implements IMenuService {
     public void deleteMenu(Long id) {
     	menuDAO.deleteById(id);
     }
+    
+    @Override
+	public Page<Menu> getAllMenuWithPagination(Pageable pageable) {
+	    return menuDAO.findAll(pageable);
+	}
 }

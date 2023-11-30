@@ -8,11 +8,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Dish;
 import com.myfood.dto.Menu;
+import com.myfood.dto.Order;
+import com.myfood.dto.OrderUserDTO;
 import com.myfood.services.MenuServiceImpl;
 
 /**
@@ -36,8 +41,12 @@ public class MenuController {
      * @return ResponseEntity containing a list of all menus.
      */
 	@GetMapping("/menus")
-	public ResponseEntity<List<Menu>> getAllMenus() {
-		return ResponseEntity.ok(menuService.getAllMenus());
+	public ResponseEntity<Page<Menu>> getAllMenus(
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size) {
+	    Pageable pageable = PageRequest.of(page, size);
+	    Page<Menu> menuPage = menuService.getAllMenuWithPagination(pageable);
+	    return ResponseEntity.ok(menuPage);
 	}
 
 	
