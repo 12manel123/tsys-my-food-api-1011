@@ -49,8 +49,8 @@ public class Menu {
 	@OneToMany(mappedBy = "menu")
     private List<Dish> dish;
 
-	public Menu() {
 
+	public Menu() {
 	}
 
 	public Menu(Long id, Dish appetizer, Dish first, Dish second, Dish dessert, boolean visible) {
@@ -116,7 +116,6 @@ public class Menu {
 		return "Menu [id=" + id + ", appetizer=" + appetizer + ", first=" + first + ", second=" + second + ", dessert="
 				+ dessert + ", visible=" + visible + "]";
 	}
-
-
-
+	
 }
+

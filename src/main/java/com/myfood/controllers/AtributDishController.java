@@ -1,6 +1,5 @@
 package com.myfood.controllers;
 
-import java.awt.print.Pageable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Atribut_Dish;
@@ -31,10 +31,11 @@ import com.myfood.services.DishServiceImpl;
  */
 @RestController
 @RequestMapping("api/v1")
-public class Atribut_DishController {
+public class AtributDishController {
 
 	@Autowired
 	private Atribut_DishServiceImpl atribut_DishService;
+	
 	@Autowired
 	private DishServiceImpl dishService;
 	
@@ -43,18 +44,22 @@ public class Atribut_DishController {
      *
      * @return ResponseEntity containing a list of all attribute-dish relationships.
      */
+    @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/atributs")
 	public ResponseEntity<List<Atribut_Dish>> getAllAtribut_Dishes() {
 		return ResponseEntity.ok(atribut_DishService.getAllAtribut_Dishes());
 	}
 	
+   
 	/**
      * Retrieve a specific attribute-dish relationship by its ID.
      *
      * @param id The ID of the attribute-dish relationship to retrieve.
      * @return ResponseEntity containing the requested attribute-dish relationship or a 404 response if not found.
      */
+    @PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/atribut/{id}")
+    //OK  
 	public ResponseEntity<Atribut_Dish> getOneAtribut_Dish(@PathVariable(name = "id") Long id) {
 		Optional<Atribut_Dish> entity = atribut_DishService.getOneAtribut_Dish(id);
 		if (entity.isPresent()) {
@@ -64,16 +69,8 @@ public class Atribut_DishController {
 		}        
 	}
 	
-	/*@GetMapping("/atribut/ByAtribute/{atributes}")
-    public ResponseEntity<List<Atribut_Dish>> getAllAttributes(@PathVariable(name = "atributes") String atribute) {
-        List<Atribut_Dish> atributes = atribut_DishService.getAtributByAtributes(atribute);
-        if(!atributes.isEmpty()) {
-        	 return ResponseEntity.ok(atributes);
-        }else {
-	        return ResponseEntity.notFound().build();
-	    }
-    }*/
-	
+
+    @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/atribut/ByAtribute/{atributes}")
 	public ResponseEntity<Page<Atribut_Dish>> getAllAttributes(
 	        @PathVariable(name = "atributes") String attribute,
@@ -120,13 +117,6 @@ public class Atribut_DishController {
 	            : ResponseEntity.ok(dishPage);
 	}
 
-
-	
-
-
-
-
-
 	/**
      * Create a new attribute-dish relationship.
      *
@@ -134,7 +124,9 @@ public class Atribut_DishController {
      * @param entity The attribute-dish relationship to be created.
      * @return ResponseEntity containing the created attribute-dish relationship or an error response.
      */
+    @PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/atribut/{dish_id}")
+    // OK
 	public ResponseEntity<?> saveAtribut_Dish(@PathVariable(name = "dish_id") Long id, @RequestBody Atribut_Dish entity) {
 		Map<String, Object> rest = new HashMap<>();
 		Optional<Dish> dish = dishService.getOneDish(id);
@@ -159,7 +151,9 @@ public class Atribut_DishController {
      * @param entity The updated attribute-dish relationship.
      * @return ResponseEntity containing the updated attribute-dish relationship or an error response.
      */
+    @PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/atribut/{dish_id}")
+    // OK
 	public ResponseEntity<?> updateAtribut_Dish(@PathVariable(name = "dish_id") Long id, @RequestBody Atribut_Dish entity) {
 		
 		Map<String, Object> rest = new HashMap<>();
@@ -184,8 +178,10 @@ public class Atribut_DishController {
      *
      * @param id The ID of the attribute-dish relationship to delete.
      * @return ResponseEntity indicating success or a 404 response if the relationship is not found.
-     */
+    */
+    @PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/atribut/{id}")
+    // OK
 	public ResponseEntity<Void> deleteAtribut_Dish(@PathVariable(name = "id") Long id) {
 		Optional<Atribut_Dish> entity = atribut_DishService.getOneAtribut_Dish(id);
 		if (entity.isPresent()) {
@@ -208,3 +204,5 @@ public class Atribut_DishController {
 	}
 
 }
+
+

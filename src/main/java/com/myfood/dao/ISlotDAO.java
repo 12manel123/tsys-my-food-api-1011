@@ -7,5 +7,6 @@ import com.myfood.dto.Slot;
 
 @Repository
 public interface ISlotDAO extends JpaRepository<Slot, Long> {
-
+	
+	// TODO Pages
 }

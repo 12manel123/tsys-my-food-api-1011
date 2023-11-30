@@ -3,25 +3,23 @@ package com.myfood.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.myfood.dto.User;
 
 public interface IUserService {
- 
-	//CRUD 
-
-	//Read All
-	public List<User> getAllUser() ;
-
-	//Read One
-	public Optional<User> getOneUser(Long id); 
 	
-	//Create
-	public User createUser(User entity);
+	List<User>getAllUsers();
+ 
+	Optional<User> getOneUser(Long id); 
 
-	//Update
-	public User updateUser(User entity);
+	User createUser(User entity);
 
-	//Delete
-	public void deleteUser(Long id); 
+	User updateUser(User entity);
 
+	void deleteUser(Long id); 
+	
+	 Page<User> findAllWithPagination(Pageable pageable);
+	
 }

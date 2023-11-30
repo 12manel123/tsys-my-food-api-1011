@@ -6,16 +6,14 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.myfood.dto.Dish;
-import com.myfood.dto.Order;
 
 public interface IDishDAO extends JpaRepository<Dish, Long> {
-	
+
 	Optional<Dish> findByName(String name);
+
 	List<Dish> findByCategory(String category);
 
-    Page<Dish> findAll(Pageable pageable);	
-
+	Page<Dish> findAll(Pageable pageable);
 
 }

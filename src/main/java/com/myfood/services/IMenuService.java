@@ -19,7 +19,7 @@ public interface IMenuService {
     Menu updateMenu(Menu entity);
 
     void deleteMenu(Long id);
+    
+    Page<Menu> getAllMenuWithPagination(Pageable pageable);
 
-	Page<Menu> getAllMenuWithPagination(Pageable pageable);
-	
 }

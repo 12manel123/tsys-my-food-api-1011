@@ -4,9 +4,7 @@ package com.myfood.dto;
 public class OrderUserDTO {
 	
     private Long id;
-
     private boolean maked;
-
     private Slot slot;
 
 	public OrderUserDTO(Long id, boolean maked, Slot slot) {
@@ -47,6 +45,5 @@ public class OrderUserDTO {
 		return "OrderUserDTO [id=" + id + ", maked=" + maked + ", slot=" + slot + "]";
 	}
 	
-    
-
 }
+

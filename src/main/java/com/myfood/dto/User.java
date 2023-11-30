@@ -4,49 +4,61 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  * The {@code User} class represents a user in the system.
  * It is annotated with JPA annotations for entity mapping.
  *
  * @author David Maza
+ * @version 1.0
  */
 @Entity
 @Table(name = "users")
 public class User {
 	
 	/**
-	 * The unique identifier for the user.
-	 */
+	* The unique identifier for the user.
+	*/
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	/**
-	 * The email address of the user. It is unique and cannot be null.
-	 */
-	@Column(name = "email", unique = true, nullable = false)
+	* The email address of the user. It is unique and cannot be null.
+	*/
+	@Email
+	@NotBlank
+	@Size(max = 80)
+	@Column(name = "email", unique = true)
 	private String email;
 	
 	/**
-	 * The password associated with the user. It cannot be null.
-	 */
-	@Column(name = "password", nullable = false)
+	* The password associated with the user. It cannot be null.
+	*/
+	@NotBlank
+	@Column(name = "password")
 	private String password;
 	
 	/**
-	 * The username of the user. It cannot be null.
-	 */
-	@Column(name = "name", nullable = false)
+	* The username of the user. It cannot be null.
+	*/
+	@NotBlank
+	@Size(max = 60)
+	@Column(name = "name", unique = true)
 	private String username;
 	
 	/**
@@ -56,8 +68,8 @@ public class User {
 	*/
 	@ManyToOne
 	private Role role;
-	
-    @OneToMany(mappedBy = "user")
+
+    @OneToMany(mappedBy = "user" ,fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Order> orders;
 	

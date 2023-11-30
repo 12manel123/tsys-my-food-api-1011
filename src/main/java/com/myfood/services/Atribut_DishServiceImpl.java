@@ -5,16 +5,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.myfood.dto.Atribut_Dish;
-import com.myfood.dto.Dish;
 import com.myfood.dao.IAtribut_DishDAO;
+import com.myfood.dto.Atribut_Dish;
 
 @Service
-public class Atribut_DishServiceImpl implements IAtribut_DishService{
-	
+public class Atribut_DishServiceImpl implements IAtribut_DishService {
+
 	@Autowired
     private IAtribut_DishDAO atribut_DishDAO;
 
@@ -46,7 +45,11 @@ public class Atribut_DishServiceImpl implements IAtribut_DishService{
     public void deleteAtribut_Dish(Long id) {
     	atribut_DishDAO.deleteById(id);
     }
+	@Override
+	public Page<Atribut_Dish> findAll(Pageable pageable) {		
+		return atribut_DishDAO.findAll(pageable);
+	}
 
-    
+   
 
 }

@@ -1,12 +1,13 @@
 package com.myfood.dto;
 
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,7 +38,7 @@ public class Role {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL )
     private List<User> users;
     
     /** Default constructor required by JPA. */
@@ -61,7 +62,7 @@ public class Role {
     	this.name = name;
     }
     
-    
+
 
     /**
      * Get the unique identifier of the role.
@@ -98,11 +99,11 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
+    
 
 	@Override
 	public String toString() {
 		return "Role [id=" + id + ", name=" + name + ", users=" + users + "]";
 	}
-
 
 }

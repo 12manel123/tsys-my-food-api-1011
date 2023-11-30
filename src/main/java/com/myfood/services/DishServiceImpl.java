@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.myfood.dao.IDishDAO;
 import com.myfood.dto.Dish;
-
 @Service
 public class DishServiceImpl implements IDishService {
 	
@@ -52,8 +51,9 @@ public class DishServiceImpl implements IDishService {
 	    	dishDAO.deleteById(id);
 	    }
 	    
-	    @Override
-		public Page<Dish> getAllDishesWithPagination(Pageable pageable) {
-		    return dishDAO.findAll(pageable);
-		}
+			@Override
+			public Page<Dish> getAllDishesWithPagination(Pageable pageable) {
+				return dishDAO.findAll(pageable);
+			}
+		
 }

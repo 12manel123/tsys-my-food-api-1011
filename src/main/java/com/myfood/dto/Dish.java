@@ -45,7 +45,6 @@ public class Dish {
 	@OneToMany(mappedBy = "dish")
     @JsonIgnore
     private List<ListOrder> listOrder;
-
 		
 	 public Dish(Long id, String name, String description, String image, double price, String category, boolean visible) {
 	        this.id = id;
@@ -61,8 +60,6 @@ public class Dish {
 		
 	}
 
-	//getters|setters
-	
 	public Long getId() {
 		return id;
 	}
@@ -126,3 +123,4 @@ public class Dish {
 	    }
 
 }
+

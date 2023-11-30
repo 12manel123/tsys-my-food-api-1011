@@ -1,7 +1,8 @@
 package com.myfood.dto;
 
 /**
- * The {@code UserDTO} class represents a user in the system using the Builder pattern.
+ * The {@code UserDTO} class represents a user in the system using the Builder
+ * pattern.
  *
  * @author David Maza
  */
@@ -46,7 +47,7 @@ public class UserDTO {
 	public Role getRole() {
 		return role;
 	}
-	
+
 	public static class Builder {
 		private Long id;
 		private String email;

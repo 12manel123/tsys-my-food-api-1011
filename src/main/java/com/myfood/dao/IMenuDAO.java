@@ -11,5 +11,6 @@ import com.myfood.dto.Menu;
 public interface IMenuDAO extends JpaRepository<Menu, Long> {
 	
 	List<Menu> findAllByVisibleIsTrue();
+	
 
 }

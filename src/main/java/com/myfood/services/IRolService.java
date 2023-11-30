@@ -1,5 +1,8 @@
 package com.myfood.services;
-
+/**
+ * @author Davi Maza
+ *
+ */
 import java.util.List;
 import java.util.Optional;
 
@@ -7,23 +10,15 @@ import com.myfood.dto.Role;
 
 public interface IRolService {
 
-	//CRUD 
-
-	//Read All
-	public List<Role> getAllRoles();
+	 List<Role> getAllRoles();
+		
+	 Optional<Role> getOneRole(Long id);
 	
-	//Read One
-	public Optional<Role> getOneRole(Long id);
+	 Role createRole(Role entity);
 	
-	//Create
-	public Role createRole(Role entity);
+	 Role updateRole(Role entity);
 	
-	//Update
-	public Role updateRole(Role entity);
+	 void deleteRole(Long id);
 	
-	//Delete
-	public void deleteRole(Long id);
-	
-	// GelByName
-	public Role findByName(String User);
+     Optional<Role> findByName(String User);
 }

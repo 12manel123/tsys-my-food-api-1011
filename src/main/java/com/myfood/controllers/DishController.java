@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Dish;
@@ -41,21 +42,16 @@ public class DishController {
 	 *
 	 * @return ResponseEntity containing a list of all dishes.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dishes")
-	public ResponseEntity<Page<Dish>> getAllDishes(
-	        @RequestParam(defaultValue = "0") int page,
-	        @RequestParam(defaultValue = "10") int size) {
-	    Pageable pageable = PageRequest.of(page, size);
+	public ResponseEntity<Page<Dish>> getAllDishes(Pageable pageable) {
 	    Page<Dish> dishPage = dishService.getAllDishesWithPagination(pageable);
 	    return ResponseEntity.ok(dishPage);
 	}
 	
 	
 	@GetMapping("/dishes/visible")
-	public ResponseEntity<Page<Dish>> getVisibleDishes(
-	        @RequestParam(defaultValue = "0") int page,
-	        @RequestParam(defaultValue = "10") int size) {
-	    Pageable pageable = PageRequest.of(page, size);
+	public ResponseEntity<Page<Dish>> getVisibleDishes(Pageable pageable) {
 
 	    List<Dish> allDishes = dishService.getAllDishes();
 	    List<Dish> visibleDishes = allDishes.stream()
@@ -82,6 +78,7 @@ public class DishController {
 	 * @param id The ID of the dish to retrieve.
 	 * @return ResponseEntity containing the requested dish or a 404 response if not found.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dish/{id}")
 	public ResponseEntity<Dish> getOneDish(@PathVariable(name = "id") Long id) {
 		Optional<Dish> entity = dishService.getOneDish(id);
@@ -98,6 +95,7 @@ public class DishController {
 	 * @param name The name of the dishes to retrieve.
 	 * @return ResponseEntity containing a list of dishes matching the provided name or a 404 response if none are found.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dish/ByName/{name}")
 	public ResponseEntity<List<Dish>> getDishByName(@PathVariable(name = "name") String name) {
 		List<Dish> allDishes = dishService.getAllDishes();
@@ -137,6 +135,7 @@ public class DishController {
 	 * @param category The category of dishes to retrieve.
 	 * @return ResponseEntity containing a list of dishes in the specified category or a 404 response if none are found.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dishes/byCategory/{category}")
 	public ResponseEntity<Page<Dish>> getDishesByCategory(
 	        @PathVariable(name = "category") String category,
@@ -194,6 +193,7 @@ public class DishController {
 	 * @param entity The dish to be created.
 	 * @return ResponseEntity containing the created dish or an error response.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/dish")
 	public ResponseEntity<?> saveDish(@RequestBody Dish entity) {
 
@@ -217,6 +217,7 @@ public class DishController {
 	 * @param entity The updated dish.
 	 * @return ResponseEntity containing the updated dish or an error response.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/dish/{id}")
 	public ResponseEntity<?> updateDish(@PathVariable(name = "id") Long id, @RequestBody Dish entity) {
 
@@ -242,6 +243,7 @@ public class DishController {
 	 * @param id The ID of the dish to update.
 	 * @return ResponseEntity indicating the success of the visibility change or an error response if the dish is not found.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/dish/changeVisibility/{id}")
 	public ResponseEntity<?> changeDishVisibility(@PathVariable(name = "id") Long id) {
 		Map<String, Object> rest = new HashMap<>();
@@ -265,6 +267,7 @@ public class DishController {
 	 * @param id The ID of the dish to delete.
 	 * @return ResponseEntity indicating success or a 404 response if the dish is not found.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/dish/{id}")
 	public ResponseEntity<Void> deleteOrder(@PathVariable(name = "id") Long id) {
 		Optional<Dish> entity = dishService.getOneDish(id);

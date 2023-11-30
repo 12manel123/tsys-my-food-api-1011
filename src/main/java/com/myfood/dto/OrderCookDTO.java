@@ -8,11 +8,8 @@ public class OrderCookDTO {
     private Slot slot;
     private List<Dish> dishes;
 
-
-    
     public OrderCookDTO() {
 	}
-
 
 	public OrderCookDTO(Long orderId, boolean maked, Slot slot, List<Dish> dishes) {
         this.orderId = orderId;
@@ -20,7 +17,6 @@ public class OrderCookDTO {
         this.slot = slot;
         this.dishes = dishes;
     }
-
 
     public Long getOrderId() {
         return orderId;

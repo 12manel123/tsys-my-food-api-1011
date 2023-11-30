@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myfood.dao.IOrderDAO;
@@ -16,7 +16,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private IOrderDAO orderDAO;
-   
+
     @Override
     public List<Order> getAllOrders() {
         return orderDAO.findAll();
@@ -41,17 +41,17 @@ public class OrderServiceImpl implements IOrderService {
     public void deleteOrder(Long id) {
         orderDAO.deleteById(id);
     }
-    
+
     @Override
     public Order markOrderAsMaked(Order entity) {
         return orderDAO.save(entity);
     }
-    
+
     @Override
     public Order updateOrderSlot(Order entity) {
         return orderDAO.save(entity);
     }
-    
+
     @Override
     public List<Order> getAllOrdersForCook() {
         return orderDAO.findAllByMakedIsFalse();
@@ -63,11 +63,8 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-	public Page<Order> getAllOrdersWithPagination(Pageable pageable) {
-	    return orderDAO.findAll(pageable);
-	}
-    
-    
-
+    public Page<Order> getAllOrdersWithPagination(Pageable pageable) {
+        return orderDAO.findAll(pageable);
+    }
 
 }

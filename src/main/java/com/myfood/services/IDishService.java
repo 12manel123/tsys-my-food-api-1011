@@ -23,9 +23,7 @@ public interface IDishService {
     Dish updateDish(Dish entity);
 
     void deleteDish(Long id);
-
-	Page<Dish> getAllDishesWithPagination(Pageable pageable);
     
-
+	Page<Dish> getAllDishesWithPagination(Pageable pageable);
 	
 }
