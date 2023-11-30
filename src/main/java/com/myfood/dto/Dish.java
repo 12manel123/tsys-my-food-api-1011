@@ -30,25 +30,35 @@ public class Dish {
 	@Column(name = "category", nullable = false)
 	private String category;
 	
+	@Column(name = "visible")
+    private boolean visible = false;  
+	
+	
 	@OneToMany(mappedBy = "dish")
 	@JsonIgnore
 	private List<Atribut_Dish> atribut_dish;
 	
+	@ManyToOne
+	@JoinColumn(name = "menu_id")
+	private Menu menu;
+	
 	@OneToMany(mappedBy = "dish")
     @JsonIgnore
     private List<ListOrder> listOrder;
-		
 
-	public Dish(Long id, String name, String description, String image, double price, String category) {
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.image = image;
-		this.price = price;
-		this.category = category;
-	}
+		
+	 public Dish(Long id, String name, String description, String image, double price, String category, boolean visible) {
+	        this.id = id;
+	        this.name = name;
+	        this.description = description;
+	        this.image = image;
+	        this.price = price;
+	        this.category = category;
+	        this.visible = visible;
+	    }
 	
-	public Dish() {	
+	public Dish() {
+		
 	}
 
 	public Long getId() {
@@ -98,11 +108,20 @@ public class Dish {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	
+    public boolean isVisible() {
+        return visible;
+    }
 
-	@Override
-	public String toString() {
-		return "Dish [id=" + id + ", name=" + name + ", description=" + description + ", image=" + image + ", price="
-				+ price + ", category=" + category + "]";
-	}
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+	 @Override
+	    public String toString() {
+	        return "Dish [id=" + id + ", name=" + name + ", description=" + description + ", image=" + image + ", price="
+	                + price + ", category=" + category + ", visible=" + visible + "]";
+	    }
 
 }
+

@@ -6,6 +6,8 @@ package com.myfood.services;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.myfood.dao.IUserDAO;
 import com.myfood.dto.User;
@@ -17,7 +19,7 @@ public class UserServiceImpl implements IUserService {
 	private IUserDAO userDao;
 
 	@Override
-	public List<User> getAllUser() {
+	public List<User> getAllUsers() {
 		return userDao.findAll();
 	}
 
@@ -50,6 +52,11 @@ public class UserServiceImpl implements IUserService {
     public User getUserByUsername(String username) {
         return userDao.findByUsername(username);
     }
+
+
+	public Page<User> findAllWithPagination(Pageable pageable) {
+		return userDao.findAll(pageable);
+	}
 
 	
 

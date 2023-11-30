@@ -17,7 +17,6 @@ import com.myfood.dto.User;
 
 public class UserDetailsImpl implements UserDetails {
 
-
 	private static final long serialVersionUID = 6418384372469434464L;
 	
 	private int id;

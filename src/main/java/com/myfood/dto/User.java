@@ -28,16 +28,16 @@ import jakarta.validation.constraints.Size;
 public class User {
 	
 	/**
-	 * The unique identifier for the user.
-	 */
+	* The unique identifier for the user.
+	*/
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	/**
-	 * The email address of the user. It is unique and cannot be null.
-	 */
+	* The email address of the user. It is unique and cannot be null.
+	*/
 	@Email
 	@NotBlank
 	@Size(max = 80)
@@ -45,15 +45,15 @@ public class User {
 	private String email;
 	
 	/**
-	 * The password associated with the user. It cannot be null.
-	 */
+	* The password associated with the user. It cannot be null.
+	*/
 	@NotBlank
 	@Column(name = "password")
 	private String password;
 	
 	/**
-	 * The username of the user. It cannot be null.
-	 */
+	* The username of the user. It cannot be null.
+	*/
 	@NotBlank
 	@Size(max = 60)
 	@Column(name = "name", unique = true)

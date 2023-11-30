@@ -45,6 +45,9 @@ public class Menu {
 	@OneToMany(mappedBy = "menu")
     @JsonIgnore
     private List<ListOrder> listOrder;
+	
+	@OneToMany(mappedBy = "menu")
+    private List<Dish> dish;
 
 	public Menu() {
 
@@ -113,5 +116,6 @@ public class Menu {
 		return "Menu [id=" + id + ", appetizer=" + appetizer + ", first=" + first + ", second=" + second + ", dessert="
 				+ dessert + ", visible=" + visible + "]";
 	}
-
+	
 }
+

@@ -3,6 +3,9 @@ package com.myfood.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.myfood.dto.Order;
 
 public interface IOrderService {
@@ -25,6 +28,6 @@ public interface IOrderService {
 
     List<Order> getAllOrdersForUserId(Long id);
     
-
+    Page<Order> getAllOrdersWithPagination(Pageable pageable);
 
 }

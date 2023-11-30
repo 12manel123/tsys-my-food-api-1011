@@ -44,8 +44,6 @@ public class RolServiceImpl implements IRolService {
 		rolDao.deleteById(id);
 	}
 
-
-	
 	/**
      * Check if the provided Role is valid.
      *

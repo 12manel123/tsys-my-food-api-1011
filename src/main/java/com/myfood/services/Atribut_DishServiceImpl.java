@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import org.springframework.stereotype.Service;
 import com.myfood.dto.Atribut_Dish;
 import com.myfood.dao.IAtribut_DishDAO;
 
@@ -43,4 +43,5 @@ public class Atribut_DishServiceImpl implements IAtribut_DishService{
     public void deleteAtribut_Dish(Long id) {
     	atribut_DishDAO.deleteById(id);
     }
+
 }

@@ -2,16 +2,11 @@ package com.myfood.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
-/**
- * The {@code Role} class represents a user in the system.
- * It is annotated with JPA annotations for entity mapping.
- *
- * @author David Maza
- * @version 1.0
- */
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -38,7 +33,7 @@ public class Order {
     @Column(name = "actual_date")
     private LocalDateTime actualDate;
     
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ListOrder> listOrder;
 
@@ -90,16 +85,10 @@ public class Order {
         this.actualDate = actualDate;
     }
 
-    	/**
-	 * @return the listOrder
-	 */
-	public List<ListOrder> getListOrder() {
+    public List<ListOrder> getListOrder() {
 		return listOrder;
 	}
 
-	/**
-	 * @param listOrder the listOrder to set
-	 */
 	public void setListOrder(List<ListOrder> listOrder) {
 		this.listOrder = listOrder;
 	}
@@ -115,5 +104,5 @@ public class Order {
                 ", actualDate=" + actualDate +
                 '}';
     }
-
 }
+

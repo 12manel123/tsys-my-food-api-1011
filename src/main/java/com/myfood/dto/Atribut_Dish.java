@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "atributes_dishes")
 public class Atribut_Dish {
-	
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +26,8 @@ public class Atribut_Dish {
 		atributes = atributes1;
 	}
 
-
-	public Atribut_Dish() {	
+	public Atribut_Dish() {
+		
 	}
 
 	public Long getId() {
@@ -37,7 +37,6 @@ public class Atribut_Dish {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 
 	public String getAtributes() {
 		return atributes;
@@ -60,6 +59,6 @@ public class Atribut_Dish {
 	@Override
 	public String toString() {
 		return "Atribut_Dish [id=" + id + ", dish=" + dish + ", Atributes=" + atributes + "]";
-	}
-
+	}	
+	
 }

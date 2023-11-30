@@ -9,6 +9,7 @@ import com.myfood.dto.ListOrder;
 
 @Repository
 public interface IListOrderDAO extends JpaRepository<ListOrder, Long> {
+	
     Optional<ListOrder> findByOrderIdAndMenuId(Long orderId, Long menuId);
 
     Optional<ListOrder> findByOrderIdAndDishId(Long orderId, Long dishId);

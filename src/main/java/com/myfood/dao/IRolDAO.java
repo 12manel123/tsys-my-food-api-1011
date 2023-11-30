@@ -1,5 +1,8 @@
 package com.myfood.dao;
-
+/**
+ * @author Davi Maza
+ *
+ */
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +13,6 @@ import com.myfood.dto.Role;
 @Repository
 public interface IRolDAO extends JpaRepository<Role,Long> {	
 	
-	public Optional<Role> findByName(String User);
+     Optional<Role> findByName(String User);
 	
 }
