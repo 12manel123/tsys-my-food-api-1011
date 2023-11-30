@@ -38,10 +38,10 @@ public class OrderController {
 
     @Autowired
     private OrderServiceImpl orderService;
-    
+
     @Autowired
     private SlotServiceImpl slotService;
-    
+
     @Autowired
     private UserServiceImpl userService;
 
@@ -68,7 +68,7 @@ public class OrderController {
 
         return ResponseEntity.ok(new PageImpl<>(orderUserDTOList, pageable, paginatedOrders.getTotalElements()));
     }
-    
+
     /**
      * Retrieves details of a specific order identified by its ID. It's for the ADMIN
      *
@@ -86,10 +86,10 @@ public class OrderController {
             OrderUserDTO orderUserDTO = new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot());
             return ResponseEntity.ok(orderUserDTO);
         } else {
-        	return createErrorResponse("The order not exists", HttpStatus.NOT_FOUND);
+            return createErrorResponse("The order not exists", HttpStatus.NOT_FOUND);
         }
     }
-    
+
     /**
      * Creates a new order based on the provided order details. It's for the ADMIN
      *
@@ -111,7 +111,8 @@ public class OrderController {
      *
      * @param id     The identifier of the order to be updated.
      * @param entity The updated order details provided in the request body.
-     * @return ResponseEntity containing a message and the details of the updated order as an {@link OrderUserDTO}.
+     * @return ResponseEntity containing a message and the details of the updated
+     *         order as an {@link OrderUserDTO}.
      * @see OrderService#getOneOrder(Long)
      * @see OrderService#updateOrder(Long, Order)
      */
@@ -121,12 +122,13 @@ public class OrderController {
         Optional<Order> entityOld = orderService.getOneOrder(id);
         if (entityOld.isPresent()) {
             entity.setId(id);
-            return ResponseEntity.ok(Map.of("Message", "Updated order", "order", new OrderUserDTO(entity.getId(), entity.isMaked(), entity.getSlot())));
+            return ResponseEntity.ok(Map.of("Message", "Updated order", "order",
+                    new OrderUserDTO(entity.getId(), entity.isMaked(), entity.getSlot())));
         } else {
             return createErrorResponse("The order not exists", HttpStatus.NOT_FOUND);
         }
     }
-    
+
     /**
      * Deletes an existing order based on the provided order ID. It's for ADMIN
      *
@@ -146,9 +148,10 @@ public class OrderController {
             return createErrorResponse("The order not exists", HttpStatus.BAD_REQUEST);
         }
     }
-    
+
     /**
-     * Retrieves a paginated list of orders suitable for a cook, including associated dishes. It's for CHEF
+     * Retrieves a paginated list of orders suitable for a cook, including
+     * associated dishes. It's for CHEF
      *
      * @param page The page number for pagination (default is 0).
      * @param size The number of orders per page (default is 8).
@@ -186,12 +189,11 @@ public class OrderController {
                 .collect(Collectors.toList());
         for (ListOrder listOrder : listOrders) {
             if (listOrder.getMenu() != null) {
-            	dishDTOList.addAll(Arrays.asList(
+                dishDTOList.addAll(Arrays.asList(
                         listOrder.getMenu().getAppetizer(),
                         listOrder.getMenu().getFirst(),
                         listOrder.getMenu().getSecond(),
-                        listOrder.getMenu().getDessert()
-                ).stream()
+                        listOrder.getMenu().getDessert()).stream()
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList()));
             }
@@ -208,9 +210,9 @@ public class OrderController {
         return dishDTO;
     }
 
-
     /**
-     * Retrieves a paginated list of orders for a specific user. It's for the history for USER
+     * Retrieves a paginated list of orders for a specific user. It's for the
+     * history for USER
      *
      * @param page   The page number for pagination (default is 0).
      * @param size   The number of orders per page (default is 10).
@@ -238,12 +240,14 @@ public class OrderController {
 
         return ResponseEntity.ok(new PageImpl<>(orderUserDTOList, pageable, paginatedOrders.getTotalElements()));
     }
-    
+
     /**
-     * Marks an order as "maked" (fulfilled) based on the provided order ID. It's for CHEFF
+     * Marks an order as "maked" (fulfilled) based on the provided order ID. It's
+     * for CHEFF
      *
      * @param id The ID of the order to be marked as "maked."
-     * @return ResponseEntity containing the updated OrderUserDTO after marking the order as "maked."
+     * @return ResponseEntity containing the updated OrderUserDTO after marking the
+     *         order as "maked."
      * @see OrderService#getOneOrder(Long)
      * @see OrderService#updateOrder(Order)
      * @see OrderUserDTO
@@ -256,7 +260,8 @@ public class OrderController {
             Order order = optionalOrder.get();
             order.setMaked(true);
             Order updatedOrder = orderService.updateOrder(order);
-            OrderUserDTO orderUserDTO = new OrderUserDTO(updatedOrder.getId(), updatedOrder.isMaked(), updatedOrder.getSlot());
+            OrderUserDTO orderUserDTO = new OrderUserDTO(updatedOrder.getId(), updatedOrder.isMaked(),
+                    updatedOrder.getSlot());
             return ResponseEntity.ok(orderUserDTO);
         } else {
             return createErrorResponse("The order not exists", HttpStatus.BAD_REQUEST);
@@ -264,11 +269,13 @@ public class OrderController {
     }
 
     /**
-     * Updates the slot of an order and confirms it, setting the actual date. Also, calculates and sets the total price of the order. It's for USER
+     * Updates the slot of an order and confirms it, setting the actual date. Also,
+     * calculates and sets the total price of the order. It's for USER
      *
      * @param orderId The ID of the order to be updated.
      * @param slotId  The ID of the slot to be associated with the order.
-     * @return ResponseEntity containing the updated OrderUserDTO after updating the order slot and confirming it.
+     * @return ResponseEntity containing the updated OrderUserDTO after updating the
+     *         order slot and confirming it.
      * @see OrderService#getOneOrder(Long)
      * @see SlotService#getOneSlot(Long)
      * @see OrderService#updateOrder(Order)
@@ -312,7 +319,7 @@ public class OrderController {
             return createErrorResponse("The order not exists", HttpStatus.BAD_REQUEST);
         }
     }
-    
+
     private Double calculateTotalPrice(Order order) {
         List<ListOrder> listOrders = order.getListOrder();
         List<Dish> dishes = listOrders.stream()
@@ -322,7 +329,8 @@ public class OrderController {
         List<Dish> menuDishes = listOrders.stream()
                 .map(listOrder -> listOrder.getMenu())
                 .filter(Objects::nonNull)
-                .flatMap(menu -> Arrays.asList(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert()).stream())
+                .flatMap(menu -> Arrays
+                        .asList(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert()).stream())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         List<Dish> allDishes = new ArrayList<>(dishes);
@@ -337,7 +345,8 @@ public class OrderController {
      * Creates and saves a new order for the specified user. It's for the USER
      *
      * @param userId The ID of the user for whom the order is created.
-     * @return ResponseEntity containing the OrderUserDTO representing the newly created order.
+     * @return ResponseEntity containing the OrderUserDTO representing the newly
+     *         created order.
      * @see UserService#getOneUser(Long)
      * @see OrderService#createOrder(Order)
      * @see OrderUserDTO
@@ -355,16 +364,18 @@ public class OrderController {
         OrderUserDTO orderUserDTO = new OrderUserDTO(savedOrder.getId(), savedOrder.isMaked(), savedOrder.getSlot());
         return ResponseEntity.ok(orderUserDTO);
     }
-    
+
     /**
-     * Retrieves a paginated list of orders based on the specified date parameters. It's for the ADMIN
+     * Retrieves a paginated list of orders based on the specified date parameters.
+     * It's for the ADMIN
      *
      * @param page  Page number (default is 0).
      * @param size  Number of items per page (default is 10).
      * @param year  The year to filter orders by (optional).
      * @param month The month to filter orders by (optional).
      * @param day   The day to filter orders by (optional).
-     * @return A ResponseEntity containing a paginated list of OrderUserDTO objects or an error message.
+     * @return A ResponseEntity containing a paginated list of OrderUserDTO objects
+     *         or an error message.
      */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/orders/date")
@@ -381,11 +392,11 @@ public class OrderController {
                 .filter(order -> {
                     LocalDateTime actualDate = order.getActualDate();
                     Long slotId = (order.getSlot() != null) ? order.getSlot().getId() : null;
-                    
+
                     return (actualDate != null && slotId != null) &&
-                           (year == null || actualDate.getYear() == year) &&
-                           (month == null || actualDate.getMonthValue() == month) &&
-                           (day == null || actualDate.getDayOfMonth() == day);
+                            (year == null || actualDate.getYear() == year) &&
+                            (month == null || actualDate.getMonthValue() == month) &&
+                            (day == null || actualDate.getDayOfMonth() == day);
                 })
                 .collect(Collectors.toList());
         int totalPages = (int) Math.ceil((double) filteredOrders.size() / size);
@@ -401,17 +412,17 @@ public class OrderController {
         paginatedOrders.forEach(order -> {
             listOrdersUserDTO.add(new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()));
         });
-        Page<OrderUserDTO> orderUserDTOPage = new PageImpl<>(listOrdersUserDTO, PageRequest.of(page, size), filteredOrders.size());
+        Page<OrderUserDTO> orderUserDTOPage = new PageImpl<>(listOrdersUserDTO, PageRequest.of(page, size),
+                filteredOrders.size());
         return ResponseEntity.ok(orderUserDTOPage);
     }
 
-    
     private ResponseEntity<?> createErrorResponse(String message, HttpStatus status) {
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("Message", message);
         return ResponseEntity.status(status).body(responseData);
     }
-    
+
     private Page<Order> paginate(List<Order> orders, Pageable pageable) {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), orders.size());

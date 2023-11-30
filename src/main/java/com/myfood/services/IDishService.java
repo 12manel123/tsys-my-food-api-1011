@@ -17,7 +17,7 @@ public interface IDishService {
     Optional<Dish> getDishByName(String name);
     
     List<Dish> getDishesByCategory(String category);
-
+    
     Dish createDish(Dish entity);
 
     Dish updateDish(Dish entity);

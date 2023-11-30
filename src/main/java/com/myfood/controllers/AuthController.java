@@ -55,7 +55,6 @@ public class AuthController {
 	            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 	    
 	    SecurityContextHolder.getContext().setAuthentication(authentication);
-	    
 	    String jwt = jwtUtils.generateAccesToken(authentication.getName());
 	    
 	    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -80,17 +79,14 @@ public class AuthController {
 		return ResponseEntity.badRequest().body("Error: Username is already taken!");
 		}
 
-		User user = new User();
-		
+		User user = new User();		
 		user.setUsername(signUpRequest.getUsername());
 		user.setPassword(this.encoder.encode(signUpRequest.getPassword()));
-		user.setRole(this.roleServ.findByName("USER").orElseThrow(() -> new RuntimeException("Not found")));
+		user.setRole(this.roleServ.findByName("USER").orElseThrow(() -> new RuntimeException("Not found"))); // TODO
 		user.setEmail(signUpRequest.getEmail());
 		this.userServ.createUser(user);
 		
 		return ResponseEntity.ok("User created!");
 	}
-	
-	
-	
+		
 }

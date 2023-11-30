@@ -81,7 +81,7 @@ public class WebSecurityConfig {
         .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests( authorize -> authorize 
-        	    .requestMatchers("/auth/**").permitAll()  
+        	    .requestMatchers("/auth/**","/swagger-ui.html","/doc.html").permitAll()  
         	    .anyRequest().authenticated())
 		.authenticationProvider(authenticationProvider()) 
 		.addFilterBefore(authorizationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class); 

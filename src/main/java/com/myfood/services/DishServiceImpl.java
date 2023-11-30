@@ -51,10 +51,9 @@ public class DishServiceImpl implements IDishService {
 	    	dishDAO.deleteById(id);
 	    }
 	    
-	   
-		@Override
-		public Page<Dish> getAllDishesWithPagination(Pageable pageable) {
-			 return dishDAO.findAll(pageable);
-		}
+			@Override
+			public Page<Dish> getAllDishesWithPagination(Pageable pageable) {
+				return dishDAO.findAll(pageable);
+			}
 		
 }

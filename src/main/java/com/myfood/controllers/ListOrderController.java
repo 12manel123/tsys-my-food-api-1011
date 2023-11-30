@@ -56,6 +56,9 @@ public class ListOrderController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/list-orders")
 	public ResponseEntity<List<ListOrder>> getAllListOrders() {
+		
+		// TODO Falta Pages para el BackOffice
+		
 		List<ListOrder> allLists = listOrderserv.getAllListOrders();
 		for (ListOrder listOrder : allLists) {
 			listOrder.getOrder().getUser().setPassword(null);

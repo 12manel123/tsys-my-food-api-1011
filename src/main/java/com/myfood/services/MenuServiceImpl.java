@@ -41,7 +41,6 @@ public class MenuServiceImpl implements IMenuService {
     public void deleteMenu(Long id) {
     	menuDAO.deleteById(id);
     }
-
     @Override
 	public Page<Menu> getAllMenuWithPagination(Pageable pageable) {
 	    return menuDAO.findAll(pageable);

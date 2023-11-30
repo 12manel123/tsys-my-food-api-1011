@@ -35,6 +35,7 @@ public class AtributDishController {
 
 	@Autowired
 	private Atribut_DishServiceImpl atribut_DishService;
+	
 	@Autowired
 	private DishServiceImpl dishService;
 	
@@ -49,14 +50,16 @@ public class AtributDishController {
 		return ResponseEntity.ok(atribut_DishService.getAllAtribut_Dishes());
 	}
 	
+   
 	/**
      * Retrieve a specific attribute-dish relationship by its ID.
      *
      * @param id The ID of the attribute-dish relationship to retrieve.
      * @return ResponseEntity containing the requested attribute-dish relationship or a 404 response if not found.
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/atribut/{id}")
+    //OK  
 	public ResponseEntity<Atribut_Dish> getOneAtribut_Dish(@PathVariable(name = "id") Long id) {
 		Optional<Atribut_Dish> entity = atribut_DishService.getOneAtribut_Dish(id);
 		if (entity.isPresent()) {
@@ -123,6 +126,7 @@ public class AtributDishController {
      */
     @PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/atribut/{dish_id}")
+    // OK
 	public ResponseEntity<?> saveAtribut_Dish(@PathVariable(name = "dish_id") Long id, @RequestBody Atribut_Dish entity) {
 		Map<String, Object> rest = new HashMap<>();
 		Optional<Dish> dish = dishService.getOneDish(id);
@@ -149,6 +153,7 @@ public class AtributDishController {
      */
     @PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/atribut/{dish_id}")
+    // OK
 	public ResponseEntity<?> updateAtribut_Dish(@PathVariable(name = "dish_id") Long id, @RequestBody Atribut_Dish entity) {
 		
 		Map<String, Object> rest = new HashMap<>();
@@ -173,9 +178,10 @@ public class AtributDishController {
      *
      * @param id The ID of the attribute-dish relationship to delete.
      * @return ResponseEntity indicating success or a 404 response if the relationship is not found.
-     */
+    */
     @PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/atribut/{id}")
+    // OK
 	public ResponseEntity<Void> deleteAtribut_Dish(@PathVariable(name = "id") Long id) {
 		Optional<Atribut_Dish> entity = atribut_DishService.getOneAtribut_Dish(id);
 		if (entity.isPresent()) {
@@ -198,4 +204,5 @@ public class AtributDishController {
 	}
 
 }
+
 

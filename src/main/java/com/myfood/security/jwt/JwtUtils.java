@@ -1,17 +1,16 @@
 package com.myfood.security.jwt;
+
 /**
  * @author Davi Maza
  *
  */
 import java.security.Key;
 import java.util.Date;
-import java.util.Map;
 import java.util.function.Function;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -22,8 +21,8 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtils {
-	
-	// Get logger
+
+    // Get logger
     private static final Logger log = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${jwt.secret.key}")
@@ -31,10 +30,9 @@ public class JwtUtils {
 
     @Value("${jwt.time.expiration}")
     private String timeExpiration;
-    
 
     // Generar token de acceso
-    public String generateAccesToken(String username){
+    public String generateAccesToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -42,35 +40,35 @@ public class JwtUtils {
                 .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-    
+
     // Validar el token de acceso
-    public boolean isTokenValid(String token){
-        try{
+    public boolean isTokenValid(String token) {
+        try {
             Jwts.parserBuilder()
                     .setSigningKey(getSignatureKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Token invalido, error: ".concat(e.getMessage()));
             return false;
         }
     }
 
     // Obtener el username del token
-    public String getUsernameFromToken(String token){
+    public String getUsernameFromToken(String token) {
         return getClaim(token, Claims::getSubject);
     }
 
     // Obtener un solo claim
-    public <T> T getClaim(String token, Function<Claims, T> claimsTFunction){
+    public <T> T getClaim(String token, Function<Claims, T> claimsTFunction) {
         Claims claims = extractAllClaims(token);
         return claimsTFunction.apply(claims);
     }
 
     // Obtener todos los claims del token
-    public Claims extractAllClaims(String token){
+    public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignatureKey())
                 .build()
@@ -79,9 +77,8 @@ public class JwtUtils {
     }
 
     // Obtener firma del token
-    public Key getSignatureKey(){
+    public Key getSignatureKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
-

@@ -16,7 +16,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private IOrderDAO orderDAO;
-   
+
     @Override
     public List<Order> getAllOrders() {
         return orderDAO.findAll();
@@ -41,17 +41,17 @@ public class OrderServiceImpl implements IOrderService {
     public void deleteOrder(Long id) {
         orderDAO.deleteById(id);
     }
-    
+
     @Override
     public Order markOrderAsMaked(Order entity) {
         return orderDAO.save(entity);
     }
-    
+
     @Override
     public Order updateOrderSlot(Order entity) {
         return orderDAO.save(entity);
     }
-    
+
     @Override
     public List<Order> getAllOrdersForCook() {
         return orderDAO.findAllByMakedIsFalse();
@@ -62,9 +62,9 @@ public class OrderServiceImpl implements IOrderService {
         return orderDAO.findAllByUserIdOrderByActualDateDesc(id);
     }
 
-	@Override
-	public Page<Order> getAllOrdersWithPagination(Pageable pageable) {
-	    return orderDAO.findAll(pageable);
-	}
+    @Override
+    public Page<Order> getAllOrdersWithPagination(Pageable pageable) {
+        return orderDAO.findAll(pageable);
+    }
 
 }

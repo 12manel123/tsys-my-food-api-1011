@@ -1,17 +1,16 @@
 package com.myfood.controllers;
+
 /**
  * @author Davi Maza
  *
  */
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,9 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import com.myfood.dto.Role;
 import com.myfood.dto.User;
@@ -38,8 +35,7 @@ import com.myfood.services.UserServiceImpl;
  * This controller provides endpoints for basic CRUD operations on users.
  *
  * @RestController Indicates that this class is a Spring MVC Controller.
- *                 @RequestMapping("/api/v1") Base mapping for all endpoints in
- *                 this controller.
+ * @RequestMapping("/api/v1") Base mapping for all endpoints in this controller.
  */
 @RestController
 @RequestMapping("api/v1")
@@ -47,33 +43,33 @@ public class UserController {
 
 	@Autowired
 	private UserServiceImpl userServ;
-	
-	@Autowired 
+
+	@Autowired
 	private RolServiceImpl roleService;
 
 	/**
-	* Retrieve all users with simplified DTO representation.
-	*
-	* @return ResponseEntity containing a list of UserDTO representing all users.
-	*/
+	 * Retrieve all users with simplified DTO representation.
+	 *
+	 * @return ResponseEntity containing a list of UserDTO representing all users.
+	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/users")
-	public ResponseEntity<Page<UserDTO>> getAllUser(Pageable pageable) {	
+	public ResponseEntity<Page<UserDTO>> getAllUser(Pageable pageable) {
 
-		 Page<User> userListPage = userServ.findAllWithPagination(pageable);
-		 Page<UserDTO> userDTOListPage = userListPage.map(user -> new UserDTO.Builder().setId(user.getId()).setEmail(user.getEmail())
-					.setUsername(user.getUsername()).setRole(user.getRole()).build());
-	
+		Page<User> userListPage = userServ.findAllWithPagination(pageable);
+		Page<UserDTO> userDTOListPage = userListPage
+				.map(user -> new UserDTO.Builder().setId(user.getId()).setEmail(user.getEmail())
+						.setUsername(user.getUsername()).setRole(user.getRole()).build());
+
 		return ResponseEntity.ok(userDTOListPage);
 	}
 
 	/**
-	* Retrieve a specific user by its ID with simplified DTO representation.
-	*
-	* @param id The ID of the user to retrieve.
-	* @return ResponseEntity containing the requested UserDTO or a 404 response if
-	*         not found.
-	*/
+	 * Retrieve a specific user by its ID with simplified DTO representation.
+	 *
+	 * @param id The ID of the user to retrieve.
+	 * @return ResponseEntity containing the requested UserDTO or a 404 response if not found.
+	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/user/{id}")
 	public ResponseEntity<UserDTO> getOneUser(@PathVariable(name = "id") Long id) {
@@ -93,11 +89,11 @@ public class UserController {
 	}
 
 	/**
-	* Create a new user. Assign the default role 'USER' if available.
-	*
-	* @param entity The user to be created.
-	* @return ResponseEntity indicating success or an error response.
-	*/
+	 * Create a new user. Assign the default role 'USER' if available.
+	 *
+	 * @param entity The user to be created.
+	 * @return ResponseEntity indicating success or an error response.
+	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/user")
 	public ResponseEntity<?> saveUser(@RequestBody User entity) {
@@ -118,12 +114,12 @@ public class UserController {
 	}
 
 	/**
-	* Update an existing user.
-	*
-	* @param id     The ID of the user to update.
-	* @param entity The updated user.
-	* @return ResponseEntity indicating success or a 404 response if not found.
-	*/
+	 * Update an existing user.
+	 *
+	 * @param id     The ID of the user to update.
+	 * @param entity The updated user.
+	 * @return ResponseEntity indicating success or a 404 response if not found.
+	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/user/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id, @RequestBody User entity) {
@@ -141,26 +137,25 @@ public class UserController {
 	}
 
 	/**
-	* Delete a user.
-	*
-	* @param id The ID of the user to delete.
-	* @return ResponseEntity indicating success or a 404 response if the user is
-	*         not found.
-	*/
+	 * Delete a user.
+	 *
+	 * @param id The ID of the user to delete.
+	 * @return ResponseEntity indicating success or a 404 response if the user is
+	 *         not found.
+	 */
 	@PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/user/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
-    	Map<String, Object> responseData = new HashMap<String, Object>();
-    	Optional<User> entity = userServ.getOneUser(id);
-        if (entity.isPresent()) {
-        	userServ.deleteUser(id);  
-        	 responseData.put("Message", "User deleted");
+	@DeleteMapping("/user/{id}")
+	public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {
+		Map<String, Object> responseData = new HashMap<String, Object>();
+		Optional<User> entity = userServ.getOneUser(id);
+		if (entity.isPresent()) {
+			userServ.deleteUser(id);
+			responseData.put("Message", "User deleted");
 			return ResponseEntity.status(204).body(responseData);
-        } else {
-        	responseData.put("Error", "The User not exists");
-        	return ResponseEntity.badRequest().body(responseData);
-        }
-    }
-	
+		} else {
+			responseData.put("Error", "The User not exists");
+			return ResponseEntity.badRequest().body(responseData);
+		}
+	}
 
 }

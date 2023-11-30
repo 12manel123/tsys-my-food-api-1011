@@ -21,6 +21,5 @@ public interface IMenuService {
     void deleteMenu(Long id);
     
     Page<Menu> getAllMenuWithPagination(Pageable pageable);
-    
-	
+
 }

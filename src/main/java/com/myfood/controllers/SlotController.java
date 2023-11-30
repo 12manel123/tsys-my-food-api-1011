@@ -152,14 +152,14 @@ public class SlotController {
     }
 
     /**
-    * Scheduled task to reset the actual count of slots every day at 15:00. It's
-    * for SYSTEM.
-    *
-    * @return ResponseEntity with status 204 (No Content) after updating the actual
-    *         count of all slots.
-    * @see Scheduled
-    * @see SlotService#updateSlot(Slot)
-    */
+     * Scheduled task to reset the actual count of slots every day at 15:00. It's
+     * for SYSTEM.
+     *
+     * @return ResponseEntity with status 204 (No Content) after updating the actual
+     *         count of all slots.
+     * @see Scheduled
+     * @see SlotService#updateSlot(Slot)
+     */
     @Scheduled(cron = "0 0 15 * * ?", zone = "Europe/Madrid")
     @PutMapping("/slots/actual")
     public ResponseEntity<Slot> updateSlot() {
