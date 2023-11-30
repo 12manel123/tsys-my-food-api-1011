@@ -1,5 +1,6 @@
 package com.myfood.controllers;
 
+import java.awt.print.Pageable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +64,7 @@ public class Atribut_DishController {
 		}        
 	}
 	
-	@GetMapping("/atribut/ByAtribute/{atributes}")
+	/*@GetMapping("/atribut/ByAtribute/{atributes}")
     public ResponseEntity<List<Atribut_Dish>> getAllAttributes(@PathVariable(name = "atributes") String atribute) {
         List<Atribut_Dish> atributes = atribut_DishService.getAtributByAtributes(atribute);
         if(!atributes.isEmpty()) {
@@ -68,10 +72,34 @@ public class Atribut_DishController {
         }else {
 	        return ResponseEntity.notFound().build();
 	    }
-    }
+    }*/
+	
+	@GetMapping("/atribut/ByAtribute/{atributes}")
+	public ResponseEntity<Page<Atribut_Dish>> getAllAttributes(
+	        @PathVariable(name = "atributes") String attribute,
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size) {
+
+	    PageRequest pageable = PageRequest.of(page, size);
+	    List<Atribut_Dish> attributes = atribut_DishService.getAtributByAtributes(attribute);
+
+	    int start = (int) pageable.getOffset();
+	    int end = Math.min((start + pageable.getPageSize()), attributes.size());
+	    List<Atribut_Dish> paginatedAttributes = attributes.subList(start, end);
+
+	    Page<Atribut_Dish> atributDishPage = new PageImpl<>(paginatedAttributes, pageable, attributes.size());
+
+	    return ResponseEntity.ok(atributDishPage);
+	}
+
+
 	
 	@GetMapping("/atribut/visibleByAtribute/{atributes}")
-	public ResponseEntity<List<Dish>> getAllVisibleAttributes(@PathVariable(name = "atributes") String atribute) {
+	public ResponseEntity<Page<Dish>> getAllVisibleAttributes(
+	        @PathVariable(name = "atributes") String atribute,
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size) {
+
 	    List<Atribut_Dish> atributDishes = atribut_DishService.getAtributByAtributes(atribute);
 
 	    List<Dish> visibleDishes = atributDishes
@@ -80,12 +108,18 @@ public class Atribut_DishController {
 	            .filter(Dish::isVisible)
 	            .collect(Collectors.toList());
 
-	    if (!visibleDishes.isEmpty()) {
-	        return ResponseEntity.ok(visibleDishes);
-	    } else {
-	        return ResponseEntity.notFound().build();
-	    }
+	    PageRequest pageable = PageRequest.of(page, size);
+	    int start = (int) pageable.getOffset();
+	    int end = Math.min((start + pageable.getPageSize()), visibleDishes.size());
+	    List<Dish> paginatedDishes = visibleDishes.subList(start, end);
+
+	    Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, visibleDishes.size());
+
+	    return paginatedDishes.isEmpty()
+	            ? ResponseEntity.notFound().build()
+	            : ResponseEntity.ok(dishPage);
 	}
+
 
 	
 
