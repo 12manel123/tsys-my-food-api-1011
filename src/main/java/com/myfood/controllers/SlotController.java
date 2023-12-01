@@ -161,7 +161,6 @@ public class SlotController {
      * @see SlotService#updateSlot(Slot)
      */
     @Scheduled(cron = "0 0 15 * * ?", zone = "Europe/Madrid")
-    @PutMapping("/slots/actual")
     public ResponseEntity<Slot> updateSlot() {
         List<Slot> allSlots = slotService.getAllSlots();
         for (Slot slot : allSlots) {
