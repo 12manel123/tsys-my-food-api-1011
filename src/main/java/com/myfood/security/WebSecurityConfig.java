@@ -87,10 +87,9 @@ public class WebSecurityConfig {
         	auth.anyRequest().authenticated()
         	.and()
         	.authenticationProvider(authenticationProvider())
-            .addFilterBefore(authorizationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class);
+          .addFilterBefore(authorizationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class);
         });
-		
-        
+    
 		return http.build();
 	}
 	

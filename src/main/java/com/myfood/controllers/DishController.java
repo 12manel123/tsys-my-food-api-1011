@@ -18,8 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.myfood.dto.Dish;
-import com.myfood.dto.Order;
-import com.myfood.dto.OrderUserDTO;
 import com.myfood.services.DishServiceImpl;
 
 /**
@@ -44,33 +42,38 @@ public class DishController {
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dishes")
-	public ResponseEntity<Page<Dish>> getAllDishes(Pageable pageable) {
-	    Page<Dish> dishPage = dishService.getAllDishesWithPagination(pageable);
-	    return ResponseEntity.ok(dishPage);
-	}
+    public ResponseEntity<Page<Dish>> getAllDishes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Dish> dishPage = dishService.getAllDishesWithPagination(pageable);
+        return ResponseEntity.ok(dishPage);
+    }
 	
 	
 	@GetMapping("/dishes/visible")
-	public ResponseEntity<Page<Dish>> getVisibleDishes(Pageable pageable) {
+    public ResponseEntity<Page<Dish>> getVisibleDishes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
 
-	    List<Dish> allDishes = dishService.getAllDishes();
-	    List<Dish> visibleDishes = allDishes.stream()
-	            .filter(Dish::isVisible)
-	            .collect(Collectors.toList());
+        List<Dish> allDishes = dishService.getAllDishes();
+        List<Dish> visibleDishes = allDishes.stream()
+                .filter(Dish::isVisible)
+                .collect(Collectors.toList());
 
-	    int start = (int) pageable.getOffset();
-	    int end = Math.min((start + pageable.getPageSize()), visibleDishes.size());
-	    List<Dish> paginatedDishes = visibleDishes.subList(start, end);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), visibleDishes.size());
+        List<Dish> paginatedDishes = visibleDishes.subList(start, end);
 
-	    Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, visibleDishes.size());
+        Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, visibleDishes.size());
 
-	    if (!paginatedDishes.isEmpty()) {
-	        return ResponseEntity.ok(dishPage);
-	    } else {
-	        return ResponseEntity.notFound().build();
-	    }
-	}
-
+        if (!paginatedDishes.isEmpty()) {
+            return ResponseEntity.ok(dishPage);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 	/**
 	 * Retrieve a specific dish by its ID.
@@ -96,7 +99,7 @@ public class DishController {
 	 * @return ResponseEntity containing a list of dishes matching the provided name or a 404 response if none are found.
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/dish/ByName/{name}")
+	@GetMapping("/dish/byName/{name}")
 	public ResponseEntity<List<Dish>> getDishByName(@PathVariable(name = "name") String name) {
 		List<Dish> allDishes = dishService.getAllDishes();
 		List<Dish> filteredDishes = new ArrayList<>();

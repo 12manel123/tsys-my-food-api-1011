@@ -33,19 +33,19 @@ public class Dish {
 	@Column(name = "visible")
     private boolean visible = false;  
 	
-	
-	@OneToMany(mappedBy = "dish")
+	@OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private List<Atribut_Dish> atribut_dish;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	@JoinColumn(name = "menu_id")
 	private Menu menu;
 	
-	@OneToMany(mappedBy = "dish")
+	@OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ListOrder> listOrder;
-		
+	
 	 public Dish(Long id, String name, String description, String image, double price, String category, boolean visible) {
 	        this.id = id;
 	        this.name = name;
