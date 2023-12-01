@@ -1,9 +1,11 @@
 package com.myfood.controllers;
+import java.util.HashMap;
 /**
  * @author David Maza
  *
  */
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,16 +75,18 @@ public class AuthController {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest){
+		Map<String, Object> responseData = new HashMap<String, Object>();
 		   String name = signUpRequest.getUsername();
 	
 		if(userServ.getUserByUsername(name) != null) {
-		return ResponseEntity.badRequest().body("Error: Username is already taken!");
+	    responseData.put("Error", "Error: Username is already taken!");
+		return ResponseEntity.badRequest().body(responseData);
 		}
 
 		User user = new User();		
 		user.setUsername(signUpRequest.getUsername());
 		user.setPassword(this.encoder.encode(signUpRequest.getPassword()));
-		user.setRole(this.roleServ.findByName("USER").orElseThrow(() -> new RuntimeException("Not found"))); // TODO
+		user.setRole(this.roleServ.findByName("USER").orElseThrow(() -> new RuntimeException("Not found"))); 
 		user.setEmail(signUpRequest.getEmail());
 		this.userServ.createUser(user);
 		

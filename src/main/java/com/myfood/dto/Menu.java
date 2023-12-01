@@ -39,7 +39,7 @@ public class Menu {
 	@JoinColumn(name = "dessert_id", referencedColumnName = "id", nullable = false)
 	private Dish dessert;
 
-	@Column(name = "visible", nullable = false, columnDefinition = "boolean default true")
+	@Column(name = "visible", nullable = false)
 	private boolean visible;
 
 	@OneToMany(mappedBy = "menu")

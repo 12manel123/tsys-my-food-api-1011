@@ -80,9 +80,11 @@ public class WebSecurityConfig {
         .csrf(csrf -> csrf.disable())                                                            
         .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests( authorize -> authorize 
-        	    .requestMatchers("/auth/**","/swagger-ui.html","/doc.html").permitAll()  
-        	    .anyRequest().authenticated())
+        .authorizeHttpRequests( auth ->{
+        	auth.requestMatchers("/auth/**").permitAll();
+        	auth.requestMatchers("/swagger-ui/**").permitAll();//
+        	auth.anyRequest().authenticated();
+        })
 		.authenticationProvider(authenticationProvider()) 
 		.addFilterBefore(authorizationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class); 
         
