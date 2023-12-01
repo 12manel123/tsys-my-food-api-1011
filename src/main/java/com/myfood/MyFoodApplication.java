@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableJpaRepositories(basePackages = "com.myfood.dao", entityManagerFactoryRef = "jpaSharedEM_entityManagerFactory")
+@EnableJpaRepositories
 public class MyFoodApplication {
 
 	public static void main(String[] args) {
