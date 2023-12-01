@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myfood.dao.IListOrderDAO;
@@ -44,5 +46,9 @@ public class ListOrderServiceImpl implements IListOrderService {
 	@Override
     public Optional<ListOrder> getListOrderByOrderAndDish(Long orderId, Long dishId) {
         return dao.findByOrderIdAndDishId(orderId, dishId);
+    }
+	@Override
+    public Page<ListOrder> getAllListOrders(Pageable pageable) {
+        return dao.findAll(pageable);
     }
 }
