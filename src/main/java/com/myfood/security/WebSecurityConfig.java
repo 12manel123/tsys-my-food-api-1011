@@ -73,6 +73,7 @@ public class WebSecurityConfig {
     
 
     // Security Filter Chain
+	@SuppressWarnings("removal")
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http ,  AuthenticationManager authenticationManager) throws Exception {
 
@@ -82,12 +83,13 @@ public class WebSecurityConfig {
         .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests( auth ->{
         	auth.requestMatchers("/auth/**").permitAll();
-        	auth.requestMatchers("/swagger-ui/**").permitAll();//
-        	auth.anyRequest().authenticated();
-        })
-		.authenticationProvider(authenticationProvider()) 
-		.addFilterBefore(authorizationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class); 
-        
+        	auth.requestMatchers("/swagger-ui/**","/doc.html").permitAll();
+        	auth.anyRequest().authenticated()
+        	.and()
+        	.authenticationProvider(authenticationProvider())
+          .addFilterBefore(authorizationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class);
+        });
+    
 		return http.build();
 	}
 	

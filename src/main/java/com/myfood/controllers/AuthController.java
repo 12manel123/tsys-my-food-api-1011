@@ -1,9 +1,12 @@
 package com.myfood.controllers;
-import java.util.HashMap;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 /**
  * @author David Maza
  *
  */
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,11 +86,13 @@ public class AuthController {
 		return ResponseEntity.badRequest().body(responseData);
 		}
 
+		ZoneId madridZone = ZoneId.of("Europe/Madrid");
 		User user = new User();		
 		user.setUsername(signUpRequest.getUsername());
 		user.setPassword(this.encoder.encode(signUpRequest.getPassword()));
 		user.setRole(this.roleServ.findByName("USER").orElseThrow(() -> new RuntimeException("Not found"))); 
 		user.setEmail(signUpRequest.getEmail());
+		user.setCreatedAt(LocalDateTime.now(madridZone));
 		this.userServ.createUser(user);
 		
 		return ResponseEntity.ok("User created!");
