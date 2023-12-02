@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -40,7 +41,8 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	DaoAuthenticationProvider authenticationProvider() {
+	AuthenticationProvider authenticationProvider() {
+		
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService);
 		authProvider.setPasswordEncoder(passwordEncoder());
@@ -73,24 +75,22 @@ public class WebSecurityConfig {
     
 
     // Security Filter Chain
-	@SuppressWarnings("removal")
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http ,  AuthenticationManager authenticationManager) throws Exception {
 
-        http.cors(cors -> corsConfigurationSource())                            
+      return  http.cors(cors -> corsConfigurationSource())                            
         .csrf(csrf -> csrf.disable())                                                            
         .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests( auth ->{
-        	auth.requestMatchers("/auth/**").permitAll();
-        	auth.requestMatchers("/swagger-ui/**","/doc.html").permitAll();
-        	auth.anyRequest().authenticated()
-        	.and()
+        .authorizeHttpRequests( auth -> auth
+        	
+        	.requestMatchers("**").permitAll()
+        	.requestMatchers("/swagger-ui/**","/doc.html").permitAll()
+        	.anyRequest().authenticated()
+        )
         	.authenticationProvider(authenticationProvider())
-          .addFilterBefore(authorizationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class);
-        });
-    
-		return http.build();
+            .addFilterBefore(authorizationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class)
+            .build();
 	}
 	
  	
