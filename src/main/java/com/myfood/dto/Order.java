@@ -33,7 +33,7 @@ public class Order {
     @Column(name = "actual_date")
     private LocalDateTime actualDate;
     
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ListOrder> listOrder;
 

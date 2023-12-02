@@ -121,9 +121,9 @@ public class OrderController {
     public ResponseEntity<?> updateOrder(@PathVariable(name = "id") Long id, @RequestBody Order entity) {
         Optional<Order> entityOld = orderService.getOneOrder(id);
         if (entityOld.isPresent()) {
-            entity.setId(id);
+           
             return ResponseEntity.ok(Map.of("Message", "Updated order", "order",
-                    new OrderUserDTO(entity.getId(), entity.isMaked(), entity.getSlot())));
+                    new OrderUserDTO(id, entity.isMaked(), entity.getSlot())));
         } else {
             return createErrorResponse("The order not exists", HttpStatus.NOT_FOUND);
         }

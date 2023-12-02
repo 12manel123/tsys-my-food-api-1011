@@ -1,5 +1,7 @@
 package com.myfood.controllers;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 /**
  * @author Davi Maza
  *
@@ -43,6 +45,7 @@ public class UserController {
 
 	@Autowired
 	private UserServiceImpl userServ;
+	
 
 	@Autowired
 	private RolServiceImpl roleService;
@@ -58,8 +61,13 @@ public class UserController {
 
 		Page<User> userListPage = userServ.findAllWithPagination(pageable);
 		Page<UserDTO> userDTOListPage = userListPage
-				.map(user -> new UserDTO.Builder().setId(user.getId()).setEmail(user.getEmail())
-						.setUsername(user.getUsername()).setRole(user.getRole()).build());
+				.map(user -> new UserDTO.Builder()
+						.setId(user.getId()).setEmail(user.getEmail())
+						.setUsername(user.getUsername())
+						.setRole(user.getRole())
+						.setCreatedAt(user.getCreatedAt())
+						.setUpdatedAt(user.getUpdatedAt())
+						.build());
 
 		return ResponseEntity.ok(userDTOListPage);
 	}
@@ -77,8 +85,14 @@ public class UserController {
 		Optional<User> entity = userServ.getOneUser(id);
 		if (entity.isPresent()) {
 
-			UserDTO userListDTO = new UserDTO.Builder().setId(entity.get().getId()).setEmail(entity.get().getEmail())
-					.setUsername(entity.get().getUsername()).setRole(entity.get().getRole()).build();
+			UserDTO userListDTO = new UserDTO.Builder()
+					.setId(entity.get().getId())
+					.setEmail(entity.get().getEmail())
+					.setUsername(entity.get().getUsername())
+					.setRole(entity.get().getRole())
+					.setCreatedAt(entity.get().getCreatedAt())
+					.setUpdatedAt(entity.get().getUpdatedAt())
+					.build();
 
 			return ResponseEntity.ok(userListDTO);
 
@@ -98,13 +112,13 @@ public class UserController {
 	@PostMapping("/user")
 	public ResponseEntity<?> saveUser(@RequestBody User entity) {
 		Map<String, Object> responseData = new HashMap<String, Object>();
-
 		Role defaultRole = roleService.findByName("USER").get();
-
 		if (defaultRole != null) {
 			entity.setRole(defaultRole);
+			ZoneId madridZone = ZoneId.of("Europe/Madrid");
+			entity.setCreatedAt(LocalDateTime.now(madridZone));
 			userServ.createUser(entity);
-
+            
 			responseData.put("created user", entity.getUsername());
 
 			return ResponseEntity.ok(responseData);
@@ -122,12 +136,32 @@ public class UserController {
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/user/{id}")
-	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id, @RequestBody User entity) {
+	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id ,@RequestBody User entity) {		
+		
 		Optional<User> entityOld = userServ.getOneUser(id);
-
+		
+			
 		if (entityOld.isPresent()) {
+			
+			if(entity.getRole() == null) {
+				entity.setRole(entityOld.get().getRole());
+			}else {
+				String rolName = entity.getRole().getName();
+				entity.setRole(roleService.findByName(rolName).get());
+			}
+			
+	
+			entity.setPassword(entityOld.get().getPassword());
 			entity.setId(id);
+			ZoneId madridZone = ZoneId.of("Europe/Madrid");
+			entity.setUpdatedAt(LocalDateTime.now(madridZone));
 			userServ.updateUser(entity);
+	
+			// Required attributes
+			entity.setUsername(entityOld.get().getUsername());
+			entity.setUsername(entityOld.get().getEmail());
+			
+					
 			Map<String, Object> responseData = new HashMap<String, Object>();
 			responseData.put("updated user", entity.getUsername());
 			return ResponseEntity.ok(responseData);

@@ -59,7 +59,6 @@ public class AtributDishController {
      */
     @PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/atribut/{id}")
-    //OK  
 	public ResponseEntity<Atribut_Dish> getOneAtribut_Dish(@PathVariable(name = "id") Long id) {
 		Optional<Atribut_Dish> entity = atribut_DishService.getOneAtribut_Dish(id);
 		if (entity.isPresent()) {
@@ -126,7 +125,6 @@ public class AtributDishController {
      */
     @PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/atribut/{dish_id}")
-    // OK
 	public ResponseEntity<?> saveAtribut_Dish(@PathVariable(name = "dish_id") Long id, @RequestBody Atribut_Dish entity) {
 		Map<String, Object> rest = new HashMap<>();
 		Optional<Dish> dish = dishService.getOneDish(id);
@@ -153,7 +151,6 @@ public class AtributDishController {
      */
     @PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/atribut/{dish_id}")
-    // OK
 	public ResponseEntity<?> updateAtribut_Dish(@PathVariable(name = "dish_id") Long id, @RequestBody Atribut_Dish entity) {
 		
 		Map<String, Object> rest = new HashMap<>();
