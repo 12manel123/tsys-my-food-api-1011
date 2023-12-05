@@ -63,7 +63,7 @@ public class OrderController {
         Page<Order> paginatedOrders = paginate(allOrders, pageable);
 
         List<OrderUserDTO> orderUserDTOList = paginatedOrders.getContent().stream()
-                .map(order -> new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()))
+                .map(order -> new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot(),order.getTotalPrice(),order.getActualDate()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new PageImpl<>(orderUserDTOList, pageable, paginatedOrders.getTotalElements()));
@@ -83,7 +83,7 @@ public class OrderController {
         Optional<Order> entity = orderService.getOneOrder(id);
         if (entity.isPresent()) {
             Order order = entity.get();
-            OrderUserDTO orderUserDTO = new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot());
+            OrderUserDTO orderUserDTO = new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot(),order.getTotalPrice(),order.getActualDate());
             return ResponseEntity.ok(orderUserDTO);
         } else {
             return createErrorResponse("The order not exists", HttpStatus.NOT_FOUND);
@@ -102,7 +102,7 @@ public class OrderController {
     @PostMapping("/order")
     public ResponseEntity<OrderUserDTO> saveOrder(@RequestBody Order entity) {
         Order savedOrder = orderService.createOrder(entity);
-        OrderUserDTO orderUserDTO = new OrderUserDTO(savedOrder.getId(), savedOrder.isMaked(), savedOrder.getSlot());
+        OrderUserDTO orderUserDTO = new OrderUserDTO(savedOrder.getId(), savedOrder.isMaked(), savedOrder.getSlot(),savedOrder.getTotalPrice(),savedOrder.getActualDate());
         return ResponseEntity.ok(orderUserDTO);
     }
 
@@ -123,7 +123,7 @@ public class OrderController {
         if (entityOld.isPresent()) {
            
             return ResponseEntity.ok(Map.of("Message", "Updated order", "order",
-                    new OrderUserDTO(id, entity.isMaked(), entity.getSlot())));
+                    new OrderUserDTO(id, entity.isMaked(), entity.getSlot(),entity.getTotalPrice(),entity.getActualDate())));
         } else {
             return createErrorResponse("The order not exists", HttpStatus.NOT_FOUND);
         }
@@ -235,7 +235,7 @@ public class OrderController {
         Page<Order> paginatedOrders = paginate(userOrders, pageable);
 
         List<OrderUserDTO> orderUserDTOList = paginatedOrders.getContent().stream()
-                .map(order -> new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()))
+                .map(order -> new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot(),order.getTotalPrice(),order.getActualDate()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new PageImpl<>(orderUserDTOList, pageable, paginatedOrders.getTotalElements()));
@@ -260,8 +260,7 @@ public class OrderController {
             Order order = optionalOrder.get();
             order.setMaked(true);
             Order updatedOrder = orderService.updateOrder(order);
-            OrderUserDTO orderUserDTO = new OrderUserDTO(updatedOrder.getId(), updatedOrder.isMaked(),
-                    updatedOrder.getSlot());
+            OrderUserDTO orderUserDTO = new OrderUserDTO(updatedOrder.getId(), updatedOrder.isMaked(),updatedOrder.getSlot(),updatedOrder.getTotalPrice(),updatedOrder.getActualDate());
             return ResponseEntity.ok(orderUserDTO);
         } else {
             return createErrorResponse("The order not exists", HttpStatus.BAD_REQUEST);
@@ -310,7 +309,7 @@ public class OrderController {
                 slot.setActual(slot.getActual() + 1);
                 orderService.updateOrder(order);
                 slotService.updateSlot(slot);
-                OrderUserDTO orderUserDTO = new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot());
+                OrderUserDTO orderUserDTO = new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot(),order.getTotalPrice(),order.getActualDate());
                 return ResponseEntity.accepted().body(orderUserDTO);
             } else {
                 return createErrorResponse("The slot not exists", HttpStatus.BAD_REQUEST);
@@ -361,7 +360,7 @@ public class OrderController {
         Order order = new Order();
         order.setUser(user);
         Order savedOrder = orderService.createOrder(order);
-        OrderUserDTO orderUserDTO = new OrderUserDTO(savedOrder.getId(), savedOrder.isMaked(), savedOrder.getSlot());
+        OrderUserDTO orderUserDTO = new OrderUserDTO(savedOrder.getId(), savedOrder.isMaked(), savedOrder.getSlot(),savedOrder.getTotalPrice(),savedOrder.getActualDate());
         return ResponseEntity.ok(orderUserDTO);
     }
 
@@ -410,7 +409,7 @@ public class OrderController {
         int end = Math.min(start + size, filteredOrders.size());
         List<Order> paginatedOrders = filteredOrders.subList(start, end);
         paginatedOrders.forEach(order -> {
-            listOrdersUserDTO.add(new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot()));
+            listOrdersUserDTO.add(new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot(),order.getTotalPrice(),order.getActualDate()));
         });
         Page<OrderUserDTO> orderUserDTOPage = new PageImpl<>(listOrdersUserDTO, PageRequest.of(page, size),
                 filteredOrders.size());

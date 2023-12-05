@@ -51,4 +51,9 @@ public class ListOrderServiceImpl implements IListOrderService {
     public Page<ListOrder> getAllListOrders(Pageable pageable) {
         return dao.findAll(pageable);
     }
+	
+	@Override
+    public Page<ListOrder> getListOrdersByOrderId(Long orderId, Pageable pageable) {
+        return dao.findByOrderId(orderId, pageable);
+    }
 }

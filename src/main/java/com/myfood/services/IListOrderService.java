@@ -25,4 +25,6 @@ public interface IListOrderService {
     Optional<ListOrder> getListOrderByOrderAndDish(Long orderId, Long dishId);
     
     Page<ListOrder> getAllListOrders(Pageable pageable);
+    
+    Page<ListOrder> getListOrdersByOrderId(Long orderId, Pageable pageable);
 }
