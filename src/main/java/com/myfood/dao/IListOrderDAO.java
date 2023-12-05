@@ -17,6 +17,7 @@ public interface IListOrderDAO extends JpaRepository<ListOrder, Long> {
     Optional<ListOrder> findByOrderIdAndDishId(Long orderId, Long dishId);
     
     Page<ListOrder> findAll(Pageable pageable);
-
+    
+    Page<ListOrder> findByOrderId(Long orderId, Pageable pageable);
     
 }

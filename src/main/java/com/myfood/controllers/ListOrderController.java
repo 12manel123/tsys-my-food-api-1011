@@ -92,6 +92,33 @@ public class ListOrderController {
 			return createErrorResponse("The list order not exists", HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	/**
+     * Retrieves a paginated list of list orders associated with a specific order ID.
+     *
+     * @param orderId The unique identifier of the order.
+     * @param page     The page number (default is 0).
+     * @param size     The number of elements per page (default is 10).
+     * @return ResponseEntity containing a paginated list of {@link ListOrder} objects associated with the specified order ID.
+     * @see ListOrderService#getListOrdersByOrderId(Long, Pageable)
+     * @see ListOrder
+     */
+    @GetMapping("/list-order/orderid/{orderId}")
+    public ResponseEntity<?> getOrdersByOrderId(
+            @PathVariable(name = "orderId") Long orderId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<ListOrder> listOrdersPage = listOrderserv.getListOrdersByOrderId(orderId, pageable);
+        
+        if (listOrdersPage.hasContent()) {
+            listOrdersPage.getContent().forEach(listOrder -> listOrder.getOrder().getUser().setPassword(null));
+            return ResponseEntity.ok(listOrdersPage);
+        } else {
+            return createErrorResponse("No list orders found for the specified order ID", HttpStatus.NOT_FOUND);
+        }
+    }
 
 	/**
 	 * Creates a new list order based on the provided details. It's for ADMIN
@@ -125,9 +152,10 @@ public class ListOrderController {
 	public ResponseEntity<?> updateListOrder(@PathVariable(name = "id") Long id, @RequestBody ListOrder entity) {
 		Optional<ListOrder> entityOld = listOrderserv.getOneListOrder(id);
 		if (entityOld.isPresent()) {
-			entity.getOrder().getUser().setPassword(null);
+			Map<String, Object> responseData = new HashMap<>();
+			responseData.put("Message", "The list order with id: "+entity.getId()+" updated.");
 			entity.setId(id);
-			return ResponseEntity.ok(listOrderserv.updateListOrder(entity));
+			return ResponseEntity.ok(responseData);
 		} else {
 			return createErrorResponse("The list order not exists", HttpStatus.BAD_REQUEST);
 		}
