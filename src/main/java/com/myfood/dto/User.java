@@ -73,7 +73,7 @@ public class User {
 	@ManyToOne
 	private Role role;
 
-    @OneToMany(mappedBy = "user" ,fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user" ,fetch =  FetchType.EAGER ,cascade = CascadeType.ALL )
     @JsonIgnore
     private List<Order> orders;
     
@@ -84,8 +84,6 @@ public class User {
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
-
-	
 
 	/**
 	 * Default constructor for the {@code User} class.
@@ -217,8 +215,6 @@ public class User {
 		return "User [id=" + id + ", email=" + email + ", password=" + password + ", username=" + username + ", role="
 				+ role + "]";
 	}
-
-
 
 
 	/**
