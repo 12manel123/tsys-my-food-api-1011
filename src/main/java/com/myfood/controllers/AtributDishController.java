@@ -71,31 +71,42 @@ public class AtributDishController {
 
     @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/atribut/ByAtribute/{atributes}")
-	public ResponseEntity<Page<Atribut_Dish>> getAllAttributes(
+	public ResponseEntity<?> getAllAttributes(
 	        @PathVariable(name = "atributes") String attribute,
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size) {
-
+    	Map<String, Object> rest = new HashMap<>();
+    	if(!isValidAtribut(attribute)) {
+    		rest.put("Error", "The 'Category' field only accepts the strings 'CELIAC,' 'LACTOSE,' 'VEGAN,' 'VEGETARIAN,' and 'NUTS'");
+			return ResponseEntity.status(400).body(rest);
+    	}
 	    PageRequest pageable = PageRequest.of(page, size);
 	    List<Atribut_Dish> attributes = atribut_DishService.getAtributByAtributes(attribute);
 
+	    if(attributes.isEmpty()) {
+	    	return ResponseEntity.notFound().build();
+	    }
 	    int start = (int) pageable.getOffset();
 	    int end = Math.min((start + pageable.getPageSize()), attributes.size());
+	    
 	    List<Atribut_Dish> paginatedAttributes = attributes.subList(start, end);
-
 	    Page<Atribut_Dish> atributDishPage = new PageImpl<>(paginatedAttributes, pageable, attributes.size());
 
 	    return ResponseEntity.ok(atributDishPage);
 	}
-
-
 	
 	@GetMapping("/atribut/visibleByAtribute/{atributes}")
-	public ResponseEntity<Page<Dish>> getAllVisibleAttributes(
+	public ResponseEntity<?> getAllVisibleAttributes(
 	        @PathVariable(name = "atributes") String atribute,
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size) {
 
+    	Map<String, Object> rest = new HashMap<>();
+	    if(!isValidAtribut(atribute)) {
+			rest.put("Error", "The 'Category' field only accepts the strings 'CELIAC,' 'LACTOSE,' 'VEGAN,' 'VEGETARIAN,' and 'NUTS'");
+			return ResponseEntity.status(400).body(rest);
+	    }
+		
 	    List<Atribut_Dish> atributDishes = atribut_DishService.getAtributByAtributes(atribute);
 
 	    List<Dish> visibleDishes = atributDishes
@@ -105,15 +116,16 @@ public class AtributDishController {
 	            .collect(Collectors.toList());
 
 	    PageRequest pageable = PageRequest.of(page, size);
+	    if(visibleDishes.isEmpty()) {
+	    	return ResponseEntity.notFound().build();
+	    }
 	    int start = (int) pageable.getOffset();
 	    int end = Math.min((start + pageable.getPageSize()), visibleDishes.size());
 	    List<Dish> paginatedDishes = visibleDishes.subList(start, end);
-
 	    Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, visibleDishes.size());
+	    
+	    return ResponseEntity.ok(dishPage);
 
-	    return paginatedDishes.isEmpty()
-	            ? ResponseEntity.notFound().build()
-	            : ResponseEntity.ok(dishPage);
 	}
 
 	/**
@@ -179,11 +191,11 @@ public class AtributDishController {
     @PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/atribut/{id}")
     // OK
-	public ResponseEntity<Void> deleteAtribut_Dish(@PathVariable(name = "id") Long id) {
+	public ResponseEntity<?> deleteAtribut_Dish(@PathVariable(name = "id") Long id) {
 		Optional<Atribut_Dish> entity = atribut_DishService.getOneAtribut_Dish(id);
 		if (entity.isPresent()) {
 			atribut_DishService.deleteAtribut_Dish(id);
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok("The atribut of "+id+" dish, is deleted");
 		} else {
 			return ResponseEntity.notFound().build();
 		}
@@ -199,7 +211,6 @@ public class AtributDishController {
 		 String[] atributesValid = {"CELIAC", "LACTOSE", "VEGAN", "VEGETARIAN", "NUTS"};
 		 return Arrays.asList(atributesValid).contains(atribut);
 	}
-
 }
 
 

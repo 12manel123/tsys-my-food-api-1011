@@ -60,13 +60,21 @@ public class MenuController {
 		return visibleMenus.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(visibleMenus);
 	}
 
+	//TODO test in postman
 	private boolean isMenuVisible(Menu menu) {
-		return menu.isVisible() &&
-				allDishesVisible(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert());
-	}
+	    boolean isMenuVisible = menu.isVisible();
+	    boolean areAllDishesVisible = areAllDishesVisible(Arrays.asList(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert()));
 
-	private boolean allDishesVisible(Dish... dishes) {
-		return Arrays.stream(dishes).allMatch(dish -> dish != null && dish.isVisible());
+	    return isMenuVisible && areAllDishesVisible;
+	}
+	//TODO test in postman
+	private boolean areAllDishesVisible(List<Dish> dishes) {
+	    for (Dish dish : dishes) {
+	        if (dish == null || !dish.isVisible()) {
+	            return false;
+	        }
+	    }
+	    return true;
 	}
 
 	/**
@@ -109,10 +117,17 @@ public class MenuController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/menu/{id}")
 	public ResponseEntity<Menu> updateMenu(@PathVariable(name = "id") Long id, @RequestBody Menu entity) {
+		
 		Optional<Menu> entityOld = menuService.getOneMenu(id);
-		if (entityOld.isPresent()) {
-			entity.setId(id);
-			return ResponseEntity.ok(menuService.updateMenu(entity));
+	
+		if (entityOld.isPresent()) {	
+			entityOld.get().setId(id);
+			entityOld.get().setAppetizer(entity.getAppetizer());
+			entityOld.get().setFirst(entity.getFirst());
+			entityOld.get().setSecond(entity.getSecond());
+			entityOld.get().setDessert(entity.getDessert());
+			entityOld.get().setVisible(entity.isVisible());		
+			return ResponseEntity.ok(menuService.updateMenu(entityOld.get()));
 		} else {
 			return ResponseEntity.notFound().build();
 		}
@@ -154,12 +169,13 @@ public class MenuController {
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/menu/{id}")
-	public ResponseEntity<Void> deleteMenu(@PathVariable(name = "id") Long id) {
+	public ResponseEntity<?> deleteMenu(@PathVariable(name = "id") Long id) {
 		Optional<Menu> entity = menuService.getOneMenu(id);
 		if (entity.isPresent()) {
 			menuService.deleteMenu(id);
-			return ResponseEntity.noContent().build();
-		} else {
+			return ResponseEntity.ok("The menu with "+id+", is deleted");		
+			} 
+		else {
 			return ResponseEntity.notFound().build();
 		}
 	}

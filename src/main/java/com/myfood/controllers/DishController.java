@@ -108,6 +108,9 @@ public class DishController {
 				filteredDishes.add(dish);
 	        }
 		}
+		if (filteredDishes.isEmpty()){
+			return ResponseEntity.notFound().build();
+		}
 		return ResponseEntity.ok(filteredDishes);
 	}
 	
@@ -129,6 +132,9 @@ public class DishController {
 				filteredDishes.add(dish);
 	        }
 		}
+		if (filteredDishes.isEmpty()){
+			return ResponseEntity.notFound().build();
+		}
 		return ResponseEntity.ok(filteredDishes);
 	}
 
@@ -140,18 +146,24 @@ public class DishController {
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dishes/byCategory/{category}")
-	public ResponseEntity<Page<Dish>> getDishesByCategory(
+	public ResponseEntity<?> getDishesByCategory(
 	        @PathVariable(name = "category") String category,
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size) {
 
 	    Pageable pageable = PageRequest.of(page, size);
+	    Map<String, Object> rest = new HashMap <String, Object>();
+	    if(!isValidCategory(category)) {
+	    	rest.put("Error", "The 'Category' field only accepts the strings 'APPETIZER,' 'FIRST,' 'SECOND,' and 'DESSERT'");
+			return ResponseEntity.status(400).body(rest);
+	    }
 	    List<Dish> dishes = dishService.getDishesByCategory(category);
-
+	    if(dishes.isEmpty()) {
+			return ResponseEntity.notFound().build();
+	    }
 	    int start = (int) pageable.getOffset();
 	    int end = Math.min((start + pageable.getPageSize()), dishes.size());
 	    List<Dish> paginatedDishes = dishes.subList(start, end);
-
 	    Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, dishes.size());
 
 	    return ResponseEntity.ok(dishPage);
@@ -165,27 +177,33 @@ public class DishController {
 	 * @return ResponseEntity containing a list of visible dishes in the specified category or a 404 response if none are found.
 	 */
 	@GetMapping("/dishes/visibleByCategory/{category}")
-	public ResponseEntity<Page<Dish>> getVisibleDishesByCategory(
+	public ResponseEntity<?> getVisibleDishesByCategory(
 	        @PathVariable(name = "category") String category,
 	        @RequestParam(defaultValue = "0") int page,
 	        @RequestParam(defaultValue = "10") int size) {
-
+	    Map<String, Object> rest = new HashMap <String, Object>();
+		if(!isValidCategory(category)) {
+	    	rest.put("Error", "The 'Category' field only accepts the strings 'APPETIZER,' 'FIRST,' 'SECOND,' and 'DESSERT'");
+			return ResponseEntity.status(400).body(rest);
+	    }
+		
 	    List<Dish> allDishes = dishService.getDishesByCategory(category);
-
 	    List<Dish> visibleDishes = allDishes.stream()
 	            .filter(Dish::isVisible)
 	            .collect(Collectors.toList());
-
+	    if(visibleDishes.isEmpty()) {
+			return ResponseEntity.notFound().build();
+	    }
 	    Pageable pageable = PageRequest.of(page, size);
+	    
 	    int start = (int) pageable.getOffset();
 	    int end = Math.min((start + pageable.getPageSize()), visibleDishes.size());
 	    List<Dish> paginatedDishes = visibleDishes.subList(start, end);
 
 	    Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, visibleDishes.size());
 
-	    return paginatedDishes.isEmpty()
-	            ? ResponseEntity.notFound().build()
-	            : ResponseEntity.ok(dishPage);
+	    return ResponseEntity.ok(dishPage);
+	    
 	}
 
 
@@ -199,8 +217,6 @@ public class DishController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/dish")
 	public ResponseEntity<?> saveDish(@RequestBody Dish entity) {
-
-		System.out.println(entity);
 
 		Map<String, Object> rest = new HashMap <String, Object>();
 
@@ -231,8 +247,16 @@ public class DishController {
 			entity.getId();
 		}
 		if (isValidCategory(entity.getCategory())) {
-
-			return ResponseEntity.ok(dishService.updateDish(entity));
+			
+			existDish.get().setCategory(entity.getCategory());
+			existDish.get().setDescription(entity.getDescription());
+			existDish.get().setId(id);
+			existDish.get().setImage(entity.getImage());
+			existDish.get().setName(entity.getName());
+			existDish.get().setPrice(entity.getPrice());
+			existDish.get().setVisible(false);
+				
+			return ResponseEntity.ok(dishService.updateDish(existDish.get()));
 		}
 		else {
 			rest.put("Error", "The 'Category' field only accepts the strings 'APPETIZER,' 'FIRST,' 'SECOND,' and 'DESSERT'");
@@ -254,7 +278,7 @@ public class DishController {
 		Optional<Dish> existingDish = dishService.getOneDish(id);
 		if (existingDish.isPresent()) {
 			Dish dishToUpdate = existingDish.get();
-			dishToUpdate.setVisible(!dishToUpdate.isVisible());  // Cambia el estado visible a su opuesto
+			dishToUpdate.setVisible(!dishToUpdate.isVisible());  
 			dishService.updateDish(dishToUpdate);
 			String visibilityStatus = dishToUpdate.isVisible() ? "visible" : "not visible";
 			return ResponseEntity.ok("Dish with ID " + id + " changed as " + visibilityStatus);
@@ -272,12 +296,13 @@ public class DishController {
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/dish/{id}")
-	public ResponseEntity<Void> deleteOrder(@PathVariable(name = "id") Long id) {
+	public ResponseEntity<?> deleteOrder(@PathVariable(name = "id") Long id) {
 		Optional<Dish> entity = dishService.getOneDish(id);
 		if (entity.isPresent()) {
 			dishService.deleteDish(id);
-			return ResponseEntity.noContent().build();
-		} else {
+			return ResponseEntity.ok("The dish with "+id+", is deleted");		
+			} 
+		else {
 			return ResponseEntity.notFound().build();
 		}
 	}
