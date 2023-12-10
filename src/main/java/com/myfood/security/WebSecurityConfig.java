@@ -64,6 +64,7 @@ public class WebSecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 	
+	
 //	// CORS Configuration Bean
 //    @Bean
 //   CorsConfigurationSource corsConfigurationSource() {
@@ -77,14 +78,15 @@ public class WebSecurityConfig {
 //        source.registerCorsConfiguration("/**", configuration);
 //        return source;
 //    }
-//    
+	
+
     @Bean
     WebMvcConfigurer corsConfig() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4200", "https://myfood.up.railway.app/**")
+                        .allowedOrigins("http://localhost:4200/**", "http://myfood.up.railway.app/**")
                         .allowedMethods(HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
                                 HttpMethod.PUT.name(),
