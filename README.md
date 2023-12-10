@@ -1,9 +1,9 @@
-<p align="center"><img src="https://i.imgur.com/ULZr4le.png" alt="Elements"></p>
+<p align="center"><img src="https://i.imgur.com/lRmkSwE.png" alt="Elements"></p>
 
 # [Javadoc](https://12manel123.github.io/tsys-my-food-api-1011)
-The Javadoc provides comprehensive information about all the controllers in this project. By accessing the [Javadoc link](https://12manel123.github.io/tsys-my-food-api-1011), you can explore detailed documentation for each controller, including information on endpoints, request parameters, and response formats. This serves as a valuable resource for developers looking to understand and interact with the API.
+The Javadoc provides comprehensive information about all the controllers in this project. By accessing the Javadoc [link](https://12manel123.github.io/tsys-my-food-api-1011), you can explore detailed documentation for each controller, including information on endpoints, request parameters, and response formats. This serves as a valuable resource for developers looking to understand and interact with the API.
 # [Postman](https://12manel123.github.io/tsys-my-food-api-1011)
-For testing and interacting with the API, you can use Postman. The [Postman link](https://12manel123.github.io/tsys-my-food-api-1011) directs you to a collection of requests that you can easily import into your Postman application. This collection includes various API requests, allowing you to test different functionalities, explore responses, and ensure seamless communication with the API. Use Postman as a powerful tool to validate and experiment with the API endpoints conveniently.
+For testing and interacting with the API, you can use Postman. The Postman [link](https://12manel123.github.io/tsys-my-food-api-1011) directs you to a collection of requests that you can easily import into your Postman application. This collection includes various API requests, allowing you to test different functionalities, explore responses, and ensure seamless communication with the API. Use Postman as a powerful tool to validate and experiment with the API endpoints conveniently.
 
 # Authentication Controller
 
