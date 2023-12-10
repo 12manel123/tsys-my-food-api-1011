@@ -1,5 +1,7 @@
 package com.myfood.dto;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,23 +13,21 @@ public class Atribut_Dish {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "dish_id")
-	private Dish dish;
-	
-	@Column(name = "atributes", nullable = false)
-	private String atributes;
+	@ManyToMany(mappedBy = "atribut_dish", fetch = FetchType.EAGER)
+	private List<Dish> dishes;
 
-	
-	public Atribut_Dish(Long id, Dish dish, String atributes1) {
-	
+	@Column(name = "attributes", nullable = false)
+	private String attributes;
+
+	public Atribut_Dish(Long id, List<Dish> dishes, String attributes) {
+		super();
 		this.id = id;
-		this.dish = dish;
-		atributes = atributes1;
+		this.dishes = dishes;
+		this.attributes = attributes;
 	}
 
 	public Atribut_Dish() {
-		
+		super();
 	}
 
 	public Long getId() {
@@ -38,27 +38,24 @@ public class Atribut_Dish {
 		this.id = id;
 	}
 
-	public String getAtributes() {
-		return atributes;
+	public List<Dish> getDishes() {
+		return dishes;
 	}
 
-	public void setAtributes(String atributes1) {
-		atributes = atributes1;
+	public void setDishes(List<Dish> dishes) {
+		this.dishes = dishes;
 	}
 
-
-	public Dish getDish() {
-		return dish;
+	public String getAttributes() {
+		return attributes;
 	}
 
-
-	public void setDish(Dish dish) {
-		this.dish = dish;
+	public void setAttributes(String attributes) {
+		this.attributes = attributes;
 	}
 
 	@Override
 	public String toString() {
-		return "Atribut_Dish [id=" + id + ", dish=" + dish + ", Atributes=" + atributes + "]";
+		return "Atribut_Dish [id=" + id + ", dishes=" + dishes + ", attributes=" + attributes + "]";
 	}	
-	
 }
