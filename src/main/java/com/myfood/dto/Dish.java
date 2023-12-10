@@ -9,12 +9,12 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "dishes")
 public class Dish {
-	
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
 	@Column(name = "name", nullable = false)
 	private String name;
 
@@ -33,18 +33,23 @@ public class Dish {
 	@Column(name = "visible")
     private boolean visible = false;  
 	
+    @ManyToMany
+    @JoinTable(
+        name = "dish_atribut_dish",
+        joinColumns = @JoinColumn(name = "dish_id"),
+        inverseJoinColumns = @JoinColumn(name = "atribut_dish_id")
+    )
+    @JsonIgnore
+    private List<Atribut_Dish> atribut_dish;
+		
 	@OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
-	private List<Atribut_Dish> atribut_dish;
+    @JsonIgnore
+    private List<ListOrder> listOrder;
 	
 	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	@JoinColumn(name = "menu_id")
 	private Menu menu;
-	
-	@OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<ListOrder> listOrder;
 	
 	 public Dish(Long id, String name, String description, String image, double price, String category, boolean visible) {
 	        this.id = id;
@@ -90,6 +95,32 @@ public class Dish {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	
+	
+	public List<Atribut_Dish> getAtribut_dish() {
+		return atribut_dish;
+	}
+
+	public void setAtribut_dish(List<Atribut_Dish> atribut_dish) {
+		this.atribut_dish = atribut_dish;
+	}
+
+	public List<ListOrder> getListOrder() {
+		return listOrder;
+	}
+
+	public void setListOrder(List<ListOrder> listOrder) {
+		this.listOrder = listOrder;
+	}
+
+	public Menu getMenu() {
+		return menu;
+	}
+
+	public void setMenu(Menu menu) {
+		this.menu = menu;
 	}
 
 	public double getPrice() {
