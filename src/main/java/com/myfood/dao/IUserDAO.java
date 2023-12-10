@@ -1,5 +1,8 @@
 package com.myfood.dao;
-
+/**
+ * @author David Maza
+ *
+ */
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 /**
