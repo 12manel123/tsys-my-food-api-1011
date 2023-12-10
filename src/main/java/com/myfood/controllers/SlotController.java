@@ -19,6 +19,9 @@ import com.myfood.dto.Slot;
 import com.myfood.dto.SlotUserDTO;
 import com.myfood.services.SlotServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("api/v1")
 public class SlotController {
@@ -33,6 +36,7 @@ public class SlotController {
      * @see SlotService#getAllSlots()
      * @see Slot
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/slots")
     public ResponseEntity<List<Slot>> getAllSlots() {
@@ -50,6 +54,7 @@ public class SlotController {
      * @see SlotService#getOneSlot(Long)
      * @see Slot
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/slot/{id}")
     public ResponseEntity<?> getOneSlot(@PathVariable(name = "id") Long id) {
@@ -69,6 +74,7 @@ public class SlotController {
      * @see SlotService#createSlot(Slot)
      * @see Slot
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/slot")
     public ResponseEntity<Slot> saveSlot(@RequestBody Slot entity) {
@@ -86,6 +92,7 @@ public class SlotController {
      * @see SlotService#updateSlot(Slot)
      * @see Slot
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/slot/{id}")
     public ResponseEntity<?> updateSlot(@PathVariable(name = "id") Long id, @RequestBody Slot entity) {
@@ -109,6 +116,7 @@ public class SlotController {
      * @see SlotService#getOneSlot(Long)
      * @see SlotService#deleteSlot(Long)
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/slot/{id}")
     public ResponseEntity<?> deleteSlot(@PathVariable(name = "id") Long id) {
@@ -130,6 +138,7 @@ public class SlotController {
      * @see SlotService#getAllSlots()
      * @see SlotUserDTO
      */
+	@Operation(summary = "Endpoint for USER", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/slots/available")
     public ResponseEntity<List<SlotUserDTO>> getAvailableSlots() {
         List<Slot> allSlots = slotService.getAllSlots();

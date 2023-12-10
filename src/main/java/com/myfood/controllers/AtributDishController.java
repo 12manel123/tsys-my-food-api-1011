@@ -20,6 +20,9 @@ import com.myfood.dto.Dish;
 import com.myfood.services.Atribut_DishServiceImpl;
 import com.myfood.services.DishServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 
 /**
  * Controller class for handling attribute-dish-related operations.
@@ -44,6 +47,7 @@ public class AtributDishController {
      *
      * @return ResponseEntity containing a list of all attribute-dish relationships.
      */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/atributs")
 	public ResponseEntity<List<Atribut_Dish>> getAllAtribut_Dishes() {
@@ -57,6 +61,7 @@ public class AtributDishController {
      * @param id The ID of the attribute-dish relationship to retrieve.
      * @return ResponseEntity containing the requested attribute-dish relationship or a 404 response if not found.
      */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/atribut/{id}")
 	public ResponseEntity<Atribut_Dish> getOneAtribut_Dish(@PathVariable(name = "id") Long id) {
@@ -69,6 +74,7 @@ public class AtributDishController {
 	}
 	
 
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/atribut/ByAtribute/{atributes}")
 	public ResponseEntity<?> getAllAttributes(
@@ -95,6 +101,7 @@ public class AtributDishController {
 	    return ResponseEntity.ok(atributDishPage);
 	}
 	
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@GetMapping("/atribut/visibleByAtribute/{atributes}")
 	public ResponseEntity<?> getAllVisibleAttributes(
 	        @PathVariable(name = "atributes") String atribute,
@@ -135,6 +142,7 @@ public class AtributDishController {
      * @param entity The attribute-dish relationship to be created.
      * @return ResponseEntity containing the created attribute-dish relationship or an error response.
      */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/atribut/{dish_id}")
 	public ResponseEntity<?> saveAtribut_Dish(@PathVariable(name = "dish_id") Long id, @RequestBody Atribut_Dish entity) {
@@ -161,6 +169,7 @@ public class AtributDishController {
      * @param entity The updated attribute-dish relationship.
      * @return ResponseEntity containing the updated attribute-dish relationship or an error response.
      */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/atribut/{dish_id}")
 	public ResponseEntity<?> updateAtribut_Dish(@PathVariable(name = "dish_id") Long id, @RequestBody Atribut_Dish entity) {
@@ -188,6 +197,7 @@ public class AtributDishController {
      * @param id The ID of the attribute-dish relationship to delete.
      * @return ResponseEntity indicating success or a 404 response if the relationship is not found.
     */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/atribut/{id}")
     // OK

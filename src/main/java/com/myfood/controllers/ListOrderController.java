@@ -31,6 +31,9 @@ import com.myfood.services.ListOrderServiceImpl;
 import com.myfood.services.MenuServiceImpl;
 import com.myfood.services.OrderServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("api/v1")
 public class ListOrderController {
@@ -56,6 +59,7 @@ public class ListOrderController {
 	 * @see ListOrderService#getAllListOrders()
 	 * @see ListOrder
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/list-orders")
     public ResponseEntity<Page<ListOrder>> getAllListOrders(
@@ -80,6 +84,7 @@ public class ListOrderController {
 	 * @see ListOrderService#getOneListOrder(Long)
 	 * @see ListOrder
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/list-order/{id}")
 	public ResponseEntity<?> getOneListOrder(@PathVariable(name = "id") Long id) {
@@ -103,6 +108,7 @@ public class ListOrderController {
      * @see ListOrderService#getListOrdersByOrderId(Long, Pageable)
      * @see ListOrder
      */
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/list-order/orderid/{orderId}")
     public ResponseEntity<?> getOrdersByOrderId(
             @PathVariable(name = "orderId") Long orderId,
@@ -129,6 +135,7 @@ public class ListOrderController {
 	 * @see ListOrderService#createListOrder(ListOrder)
 	 * @see ListOrder
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/list-order")
 	public ResponseEntity<ListOrder> saveListOrder(@RequestBody ListOrder entity) {
@@ -147,6 +154,7 @@ public class ListOrderController {
 	 * @see ListOrderService#updateListOrder(ListOrder)
 	 * @see ListOrder
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/list-order/{id}")
 	public ResponseEntity<?> updateListOrder(@PathVariable(name = "id") Long id, @RequestBody ListOrder entity) {
@@ -171,6 +179,7 @@ public class ListOrderController {
 	 * @see ListOrderService#getOneListOrder(Long)
 	 * @see ListOrderService#deleteListOrder(Long)
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/list-order/{id}")
 	public ResponseEntity<?> deleteListOrder(@PathVariable(name = "id") Long id) {
@@ -201,6 +210,7 @@ public class ListOrderController {
 	 * @see ListOrderService#createListOrder(ListOrder)
 	 * @see ListOrder
 	 */
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@PostMapping("/list-order/{orderid}/{itemid}")
 	public ResponseEntity<?> saveListOrder(
 			@PathVariable(name = "orderid") Long orderid,

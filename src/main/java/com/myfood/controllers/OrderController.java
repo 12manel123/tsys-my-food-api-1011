@@ -32,6 +32,9 @@ import com.myfood.services.OrderServiceImpl;
 import com.myfood.services.SlotServiceImpl;
 import com.myfood.services.UserServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("api/v1")
 public class OrderController {
@@ -53,6 +56,7 @@ public class OrderController {
      * @return ResponseEntity containing a paginated list of {@link OrderUserDTO}.
      * @see OrderService#getAllOrdersWithPagination(Pageable)
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/orders")
     public ResponseEntity<Page<OrderUserDTO>> getAllOrders(
@@ -77,6 +81,7 @@ public class OrderController {
      * @throws DataNotFoundException If the specified order does not exist.
      * @see OrderService#getOneOrder(Long)
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/order/{id}")
     public ResponseEntity<?> getOneOrder(@PathVariable(name = "id") Long id) {
@@ -98,6 +103,7 @@ public class OrderController {
      * {@link OrderUserDTO} and returned in the ResponseEntity with status 200 (OK).
      * @see OrderService#createOrder(Order)
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/order")
     public ResponseEntity<OrderUserDTO> saveOrder(@RequestBody Order entity) {
@@ -116,6 +122,7 @@ public class OrderController {
      * @see OrderService#getOneOrder(Long)
      * @see OrderService#updateOrder(Long, Order)
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/order/{id}")
     public ResponseEntity<?> updateOrder(@PathVariable(name = "id") Long id, @RequestBody Order entity) {
@@ -137,6 +144,7 @@ public class OrderController {
      * @see OrderService#getOneOrder(Long)
      * @see OrderService#deleteOrder(Long)
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/order/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable(name = "id") Long id) {
@@ -161,6 +169,7 @@ public class OrderController {
      * @see OrderController#paginate(List, Pageable)
      * @see OrderCookDTO
      */
+	@Operation(summary = "Endpoint for CHEF and ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('CHEF') or hasRole('ADMIN')")
     @GetMapping("/orders/chef")
     public ResponseEntity<Page<OrderCookDTO>> getAllOrdersForChef(
@@ -222,6 +231,7 @@ public class OrderController {
      * @see OrderService#getAllOrdersForUserId(Long)
      * @see OrderUserDTO
      */
+	@Operation(summary = "Endpoint for USER", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/orders/{userId}")
     public ResponseEntity<?> getAllOrdersForUserPaginate(
             @RequestParam(defaultValue = "0") int page,
@@ -252,6 +262,7 @@ public class OrderController {
      * @see OrderService#updateOrder(Order)
      * @see OrderUserDTO
      */
+	@Operation(summary = "Endpoint for CHEF and ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('CHEF') or hasRole('ADMIN')")
     @PutMapping("/order/markAsMaked/{id}")
     public ResponseEntity<?> markOrderAsMaked(@PathVariable(name = "id") Long id) {
@@ -282,6 +293,7 @@ public class OrderController {
      * @see #calculateTotalPrice(Order)
      * @see OrderUserDTO
      */
+	@Operation(summary = "Endpoint for USER", security = @SecurityRequirement(name = "bearerAuth"))
     @PutMapping("/order/finish/{orderId}/{slotId}")
     public ResponseEntity<?> updateOrderSlot(
             @PathVariable(name = "orderId") Long orderId,
@@ -350,6 +362,7 @@ public class OrderController {
      * @see OrderService#createOrder(Order)
      * @see OrderUserDTO
      */
+	@Operation(summary = "Endpoint for USER", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/order/{userId}")
     public ResponseEntity<?> saveOrder(@PathVariable(name = "userId") Long userId) {
         Optional<User> userOptional = userService.getOneUser(userId);
@@ -376,6 +389,7 @@ public class OrderController {
      * @return A ResponseEntity containing a paginated list of OrderUserDTO objects
      *         or an error message.
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/orders/date")
     public ResponseEntity<?> getOrdersByDatePaginate(

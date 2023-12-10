@@ -19,6 +19,9 @@ import com.myfood.dto.Dish;
 import com.myfood.dto.Menu;
 import com.myfood.services.MenuServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 /**
  * Controller class for handling menu-related operations.
  *
@@ -40,6 +43,7 @@ public class MenuController {
 	 *
 	 * @return ResponseEntity containing a list of all menus.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/menus")
 	public ResponseEntity<Page<Menu>> getAllMenus(
@@ -49,7 +53,8 @@ public class MenuController {
 		Page<Menu> menuPage = menuService.getAllMenuWithPagination(pageable);
 		return ResponseEntity.ok(menuPage);
 	}
-
+	
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@GetMapping("/allVisibleMenus")
 	public ResponseEntity<List<Menu>> getAllVisibleMenus() {
 		List<Menu> visibleMenus = menuService.getAllMenus()
@@ -60,14 +65,14 @@ public class MenuController {
 		return visibleMenus.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(visibleMenus);
 	}
 
-	//TODO test in postman
+	
 	private boolean isMenuVisible(Menu menu) {
 	    boolean isMenuVisible = menu.isVisible();
 	    boolean areAllDishesVisible = areAllDishesVisible(Arrays.asList(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert()));
 
 	    return isMenuVisible && areAllDishesVisible;
 	}
-	//TODO test in postman
+	
 	private boolean areAllDishesVisible(List<Dish> dishes) {
 	    for (Dish dish : dishes) {
 	        if (dish == null || !dish.isVisible()) {
@@ -84,6 +89,7 @@ public class MenuController {
 	 * @return ResponseEntity containing the requested menu or a 404 response if not
 	 *         found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/menu/{id}")
 	public ResponseEntity<Menu> getOneMenu(@PathVariable(name = "id") Long id) {
@@ -114,6 +120,7 @@ public class MenuController {
 	 * @return ResponseEntity containing the updated menu or a 404 response if not
 	 *         found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/menu/{id}")
 	public ResponseEntity<Menu> updateMenu(@PathVariable(name = "id") Long id, @RequestBody Menu entity) {
@@ -140,6 +147,7 @@ public class MenuController {
 	 * @return ResponseEntity indicating success or a 404 response if the menu is
 	 *         not found.
 	 */
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@PutMapping("/menu/changeVisibility/{id}")
 	public ResponseEntity<?> toggleMenuVisibility(@PathVariable(name = "id") Long id) {
 		Optional<Menu> existingMenu = menuService.getOneMenu(id);
@@ -167,6 +175,7 @@ public class MenuController {
 	 * @return ResponseEntity indicating success or a 404 response if the menu is
 	 *         not found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/menu/{id}")
 	public ResponseEntity<?> deleteMenu(@PathVariable(name = "id") Long id) {

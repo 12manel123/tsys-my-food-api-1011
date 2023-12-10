@@ -23,6 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myfood.dto.Role;
 import com.myfood.services.RolServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.models.annotations.OpenAPI30;
+
+
 /**
  * Controller class for handling role-related operations.
  *
@@ -43,6 +48,7 @@ public class RolController {
 	*
 	* @return ResponseEntity with a list of roles and an HTTP status code.
 	*/
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/roles")
 	public ResponseEntity<List<Role>> getAllRole() {
@@ -55,6 +61,7 @@ public class RolController {
      * @param id The ID of the role to retrieve.
      * @return ResponseEntity containing the requested role or a 404 response if not found.
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/role/{id}")
 	public ResponseEntity<Role> getOneRole(@PathVariable(name = "id") Long id) { 
@@ -72,6 +79,7 @@ public class RolController {
      * @param entity The role to be created.
      * @return ResponseEntity containing the created role.
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/role")
 	public ResponseEntity<?> saveRole(@RequestBody Role entity) {
@@ -90,6 +98,7 @@ public class RolController {
      * @param entity The updated role.
      * @return ResponseEntity containing the updated role or a 404 response if not found.
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/role/{id}")
 	public ResponseEntity<Role> updateRole(@PathVariable(name = "id") Long id, @RequestBody Role entity) {
@@ -108,6 +117,7 @@ public class RolController {
      * @param id The ID of the role to delete.
      * @return ResponseEntity indicating success or a 404 response if the role is not found.
      */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/role/{id}")
 	public ResponseEntity<Void> deleteRole(@PathVariable(name = "id") Long id) { 

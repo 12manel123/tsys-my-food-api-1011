@@ -53,7 +53,7 @@ public class AuthController {
 	private JwtUtils jwtUtils;
 
 
-	@PostMapping("/signin")
+	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		
 	    Authentication authentication = authenticationManager.authenticate(
@@ -76,7 +76,7 @@ public class AuthController {
 		return ResponseEntity.ok(this.jwtUtils.isTokenValid(jwt));
 	}
 	
-	@PostMapping("/signup")
+	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest){
 		Map<String, Object> responseData = new HashMap<String, Object>();
 		   String name = signUpRequest.getUsername();
