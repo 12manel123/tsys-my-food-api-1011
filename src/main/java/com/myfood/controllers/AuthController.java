@@ -39,7 +39,7 @@ import com.myfood.services.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -98,7 +98,7 @@ public class AuthController {
 		user.setCreatedAt(LocalDateTime.now(madridZone));
 		this.userServ.createUser(user);
 		
-		return ResponseEntity.ok("User created!");
+		return ResponseEntity.ok(Map.of("Message", "User created!"));
 	}
 		
 }
