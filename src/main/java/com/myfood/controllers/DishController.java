@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import com.myfood.dto.Dish;
 import com.myfood.services.DishServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 /**
  * Controller class for handling dish-related operations.
  *
@@ -40,6 +43,7 @@ public class DishController {
 	 *
 	 * @return ResponseEntity containing a list of all dishes.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dishes")
     public ResponseEntity<Page<Dish>> getAllDishes(
@@ -50,7 +54,7 @@ public class DishController {
         return ResponseEntity.ok(dishPage);
     }
 	
-	
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@GetMapping("/dishes/visible")
     public ResponseEntity<Page<Dish>> getVisibleDishes(
             @RequestParam(defaultValue = "0") int page,
@@ -81,6 +85,7 @@ public class DishController {
 	 * @param id The ID of the dish to retrieve.
 	 * @return ResponseEntity containing the requested dish or a 404 response if not found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dish/{id}")
 	public ResponseEntity<Dish> getOneDish(@PathVariable(name = "id") Long id) {
@@ -98,6 +103,7 @@ public class DishController {
 	 * @param name The name of the dishes to retrieve.
 	 * @return ResponseEntity containing a list of dishes matching the provided name or a 404 response if none are found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dish/byName/{name}")
 	public ResponseEntity<List<Dish>> getDishByName(@PathVariable(name = "name") String name) {
@@ -120,6 +126,7 @@ public class DishController {
 	 * @param name The name of the dishes to retrieve.
 	 * @return ResponseEntity containing a list of visible dishes matching the provided name or a 404 response if none are found.
 	 */
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@GetMapping("/dish/visibleByName/{name}")
 	public ResponseEntity<List<Dish>> getDishByNameVisible(@PathVariable(name = "name") String name) {
 		List<Dish> allDishes = dishService.getAllDishes()
@@ -144,6 +151,7 @@ public class DishController {
 	 * @param category The category of dishes to retrieve.
 	 * @return ResponseEntity containing a list of dishes in the specified category or a 404 response if none are found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dishes/byCategory/{category}")
 	public ResponseEntity<?> getDishesByCategory(
@@ -176,6 +184,7 @@ public class DishController {
 	 * @param category The category of dishes to retrieve.
 	 * @return ResponseEntity containing a list of visible dishes in the specified category or a 404 response if none are found.
 	 */
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@GetMapping("/dishes/visibleByCategory/{category}")
 	public ResponseEntity<?> getVisibleDishesByCategory(
 	        @PathVariable(name = "category") String category,
@@ -214,6 +223,7 @@ public class DishController {
 	 * @param entity The dish to be created.
 	 * @return ResponseEntity containing the created dish or an error response.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/dish")
 	public ResponseEntity<?> saveDish(@RequestBody Dish entity) {
@@ -236,6 +246,7 @@ public class DishController {
 	 * @param entity The updated dish.
 	 * @return ResponseEntity containing the updated dish or an error response.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/dish/{id}")
 	public ResponseEntity<?> updateDish(@PathVariable(name = "id") Long id, @RequestBody Dish entity) {
@@ -270,6 +281,7 @@ public class DishController {
 	 * @param id The ID of the dish to update.
 	 * @return ResponseEntity indicating the success of the visibility change or an error response if the dish is not found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/dish/changeVisibility/{id}")
 	public ResponseEntity<?> changeDishVisibility(@PathVariable(name = "id") Long id) {
@@ -294,6 +306,7 @@ public class DishController {
 	 * @param id The ID of the dish to delete.
 	 * @return ResponseEntity indicating success or a 404 response if the dish is not found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/dish/{id}")
 	public ResponseEntity<?> deleteOrder(@PathVariable(name = "id") Long id) {

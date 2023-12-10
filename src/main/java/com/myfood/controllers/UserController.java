@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +30,10 @@ import com.myfood.dto.User;
 import com.myfood.dto.UserDTO;
 import com.myfood.services.RolServiceImpl;
 import com.myfood.services.UserServiceImpl;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 /**
  * Controller class for handling user-related operations.
@@ -49,16 +53,18 @@ public class UserController {
 
 	@Autowired
 	private RolServiceImpl roleService;
-
 	/**
-	 * Retrieve all users with simplified DTO representation.
-	 *
-	 * @return ResponseEntity containing a list of UserDTO representing all users.
-	 */
+	* Retrieve all users with simplified DTO representation.
+	*
+	* @return ResponseEntity containing a list of UserDTO representing all users.
+	*/
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/users")
-	public ResponseEntity<Page<UserDTO>> getAllUser(Pageable pageable) {
-
+	public ResponseEntity<Page<UserDTO>> getAllUser(
+			@PageableDefault(size = 20, page = 0, sort = "id")
+			Pageable pageable) {
+			
 		Page<User> userListPage = userServ.findAllWithPagination(pageable);
 		Page<UserDTO> userDTOListPage = userListPage
 				.map(user -> new UserDTO.Builder()
@@ -78,6 +84,7 @@ public class UserController {
 	 * @param id The ID of the user to retrieve.
 	 * @return ResponseEntity containing the requested UserDTO or a 404 response if not found.
 	 */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/user/{id}")
 	public ResponseEntity<UserDTO> getOneUser(@PathVariable(name = "id") Long id) {
@@ -108,6 +115,7 @@ public class UserController {
 	 * @param entity The user to be created.
 	 * @return ResponseEntity indicating success or an error response.
 	 */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/user")
 	public ResponseEntity<?> saveUser(@RequestBody User entity) {
@@ -134,6 +142,7 @@ public class UserController {
 	 * @param entity The updated user.
 	 * @return ResponseEntity indicating success or a 404 response if not found.
 	 */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/user/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id ,@RequestBody User entity) {		
@@ -177,6 +186,7 @@ public class UserController {
 	 * @return ResponseEntity indicating success or a 404 response if the user is
 	 *         not found.
 	 */
+	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/user/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable(name = "id") Long id) {

@@ -19,6 +19,9 @@ import com.myfood.dto.Dish;
 import com.myfood.dto.Menu;
 import com.myfood.services.MenuServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 /**
  * Controller class for handling menu-related operations.
  *
@@ -40,6 +43,7 @@ public class MenuController {
 	 *
 	 * @return ResponseEntity containing a list of all menus.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/menus")
 	public ResponseEntity<Page<Menu>> getAllMenus(
@@ -61,6 +65,7 @@ public class MenuController {
 	 * @return ResponseEntity<List<Menu>> A response entity containing the list of visible menus
 	 *         if they exist, or a 404 Not Found response if no visible menus are available.
 	 */
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@GetMapping("/allVisibleMenus")
 	public ResponseEntity<List<Menu>> getAllVisibleMenus() {
 		List<Menu> visibleMenus = menuService.getAllMenus()
@@ -96,6 +101,7 @@ public class MenuController {
 	 * @return ResponseEntity containing the requested menu or a 404 response if not
 	 *         found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/menu/{id}")
 	public ResponseEntity<Menu> getOneMenu(@PathVariable(name = "id") Long id) {
@@ -113,6 +119,7 @@ public class MenuController {
 	 * @param entity The menu to be created.
 	 * @return ResponseEntity containing the created menu.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/menu")
 	public ResponseEntity<Menu> saveMenu(@RequestBody Menu entity) {
@@ -127,6 +134,7 @@ public class MenuController {
 	 * @return ResponseEntity containing the updated menu or a 404 response if not
 	 *         found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/menu/{id}")
 	public ResponseEntity<Menu> updateMenu(@PathVariable(name = "id") Long id, @RequestBody Menu entity) {
@@ -153,6 +161,7 @@ public class MenuController {
 	 * @return ResponseEntity indicating success or a 404 response if the menu is
 	 *         not found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/menu/changeVisibility/{id}")
 	public ResponseEntity<?> toggleMenuVisibility(@PathVariable(name = "id") Long id) {
@@ -181,6 +190,7 @@ public class MenuController {
 	 * @return ResponseEntity indicating success or a 404 response if the menu is
 	 *         not found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/menu/{id}")
 	public ResponseEntity<?> deleteMenu(@PathVariable(name = "id") Long id) {

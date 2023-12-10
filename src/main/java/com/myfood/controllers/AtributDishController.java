@@ -21,6 +21,9 @@ import com.myfood.dto.Dish;
 import com.myfood.services.Atribut_DishServiceImpl;
 import com.myfood.services.DishServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import jakarta.transaction.Transactional;
 
 
@@ -51,6 +54,7 @@ public class AtributDishController {
 	 * @param size The size of each page for pagination (default is 10).
 	 * @return ResponseEntity containing a paginated list of attribute-dish relationships or a not found response if no relationships are found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/atributs")
 	public ResponseEntity<Page<Atribut_Dish>> getAllAtribut_Dishes(
@@ -76,6 +80,7 @@ public class AtributDishController {
 	 * @param size The size of each page for pagination (default is 1).
 	 * @return ResponseEntity containing the requested attribute-dish relationship or a not found response if the relationship is not found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/atribut/{id}")
 	public ResponseEntity<Page<Atribut_Dish>> getOneAtribut_Dish(
@@ -105,6 +110,7 @@ public class AtributDishController {
 	 * @param size The size of each page for pagination (default is 10).
 	 * @return ResponseEntity containing a paginated list of attribute-dish relationships filtered by the specified attributes, or an error response if the attributes are invalid.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/atribut/ByName/{attributes}")
     public ResponseEntity<?> getAllAttributes(
@@ -143,6 +149,7 @@ public class AtributDishController {
 	 * @param size The size of each page for pagination (default is 10).
 	 * @return ResponseEntity containing a paginated list of visible dishes filtered by the specified attribute, or an error response if the attribute is invalid.
 	 */
+	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@GetMapping("/atribut/visible/{atribut}/dishes")
 	public ResponseEntity<?> getDishesByAtributVisible(
 	        @PathVariable(name = "atribut") String atribut,
@@ -179,6 +186,7 @@ public class AtributDishController {
 	 * @param atributDishId The ID of the attribute-dish relationship to associate with the dish.
 	 * @return ResponseEntity indicating success or a not found response if either the dish or attribute-dish relationship is not found.
 	 */
+	  @Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     @PostMapping("/atribut/{atributDishId}/dish/{dishId}")
@@ -201,15 +209,16 @@ public class AtributDishController {
     }
 	
     /**
-     * Update an existing attribute-dish relationship associated with a dish.
-     *
-     * This endpoint requires ADMIN role for access.
-     *
-     * @param id The ID of the dish associated with the attribute.
-     * @param entity The updated attribute-dish relationship.
-     * @return ResponseEntity containing the updated attribute-dish relationship or an error response if the attribute is invalid.
-     */
-	@PreAuthorize("hasRole('ADMIN')")
+		 * Update an existing attribute-dish relationship associated with a dish.
+		 *
+		 * This endpoint requires ADMIN role for access.
+		 *
+		 * @param id The ID of the dish associated with the attribute.
+		 * @param entity The updated attribute-dish relationship.
+		 * @return ResponseEntity containing the updated attribute-dish relationship or an error response if the attribute is invalid.
+		 */
+		@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
+	  @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/atribut/{dish_id}")
     public ResponseEntity<?> updateAtribut_Dish(@PathVariable(name = "dish_id") Long id, @RequestBody Atribut_Dish entity) {
         Map<String, Object> rest = new HashMap<>();
@@ -235,6 +244,7 @@ public class AtributDishController {
 	 * @param dishId The ID of the dish associated with the attribute-dish relationship.
 	 * @return ResponseEntity indicating success or a not found response if either the attribute-dish relationship or the dish is not found.
 	 */
+	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
     @Transactional
     @DeleteMapping("/atribut/{atributId}/dish/{dishId}")

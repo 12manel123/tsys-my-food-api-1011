@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -74,6 +75,7 @@ public class WebSecurityConfig {
     }
     
 
+
     // Security Filter Chain
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http ,  AuthenticationManager authenticationManager) throws Exception {
@@ -84,14 +86,33 @@ public class WebSecurityConfig {
         .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests( auth -> auth
         	
-        	.requestMatchers("/auth/signin", "/auth/validate-jwt" ,"/auth/signup").permitAll()
-        	.requestMatchers("/swagger-ui/**","/doc.html").permitAll()
+        	.requestMatchers(AUTH_WHITELIST)
+        	.permitAll()
         	.anyRequest().authenticated()
         )
         	.authenticationProvider(authenticationProvider())
             .addFilterBefore(authorizationJwtTokenFilter(),UsernamePasswordAuthenticationFilter.class)
             .build();
 	}
+	
+
+	 protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	        auth.inMemoryAuthentication()
+	                .withUser("superadmin")
+	                .password(passwordEncoder().encode("123456"))
+	                .authorities("ADMIN");
+	    }
+	
+	private final String[] AUTH_WHITELIST = {
+			"/auth/**",
+	        "/swagger-resources",
+	        "/swagger-resources/**",
+	        "/configuration/ui",
+	        "/configuration/security",
+	        "/swagger-ui.html",
+	        "/v3/api-docs/**",
+	        "/swagger-ui/**",
+	};
 	
  	
 }
