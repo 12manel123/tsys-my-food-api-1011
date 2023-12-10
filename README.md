@@ -68,12 +68,14 @@
   {
     "email":"david2Dev@gmail.com",
     "username": "david",
-    "role": {
+    "role":{
+      
     	"id": 1,
     	"name": "ADMIN"
+      }
   }
-}
-  ```
+    ```
+
 
 ## Delete User
 - **Endpoint:** `DELETE /api/v1/user/{id}`
@@ -126,7 +128,7 @@
   - `year` (Integer, optional): The year to filter orders by.
   - `month` (Integer, optional): The month to filter orders by.
   - `day` (Integer, optional): The day to filter orders by.
-```
+
 
 ## Save Order For User
 - **Endpoint:** `POST /api/v1/order/{userId}`
@@ -144,10 +146,10 @@
   - `id` (Long): ID of the order to update.
 - **Request Body Example:**
   ```json
-{
-  "totalPrice": 1,
-  "actualDate": "2023-12-01T14:30:06.262Z"
-}
+    {
+      "totalPrice": 1,
+      "actualDate": "2023-12-01T14:30:06.262Z"
+    }
   ```
 
 ## Mark Order As Maked
@@ -216,38 +218,23 @@
 - **Path Parameters:** `id` (Long): ID of the list order to update.
 - **Request Body Example:**
 ```json
-{
-            "id": 2,
-            "menu": null,
-            "dish": {
-                "id": 1,
-                "name": "Macarrones a la Boloñesa",
-                "description": "Contiene salsa de tomate ",
-                "image": "//xxx",
-                "price": 5.0,
-                "category": "FIRST",
-                "visible": true
-            },
-            "order": {
-                "id": 1,
-                "maked": false,
-                "user": {
-                    "id": 6,
-                    "email": "daniDev@gmail.com",
-                    "password": null,
-                    "username": "daniDev",
-                    "role": {
-                        "id": 3,
-                        "name": "USER"
-                    },
-                    "createdAt": "2023-12-01T14:24:16.627688",
-                    "updatedAt": null
-                },
-                "slot": null,
-                "totalPrice": 0.0,
-                "actualDate": "2023-12-01T14:32:43.642"
-            }
+    {
+      "id": 1,
+      "menu": null,
+      "dish": {
+            "id": 1,
+            "name": "Croquetas de Boletus",
+            "description": "Una tapa de apetitosas croquetas con trozos de boletus",
+            "image": "https://i.imgur.com/croquetas.png",
+            "price": 3.5,
+            "category": "APPETIZER",
+            "visible": true
+        },
+      "order": {
+        "id": 1
         }
+    }
+    
 ```
 
 ### Delete ListOrder
