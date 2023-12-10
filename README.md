@@ -1,3 +1,13 @@
+<p align="center"><img src="https://i.imgur.com/lRmkSwE.png" alt="Elements"></p>
+
+# My Food API Documentation
+
+Welcome to the documentation for the Tsys My Food API. Below, you'll find information on how to navigate and use the available resources.
+
+- [**Javadoc**](https://12manel123.github.io/tsys-my-food-api-1011): Explore comprehensive information about all controllers.
+- [**Postman**](https://12manel123.github.io/tsys-my-food-api-1011): Test API requests conveniently using Postman.
+<hr>
+
 # Authentication Controller
 
 ## Loguin
@@ -24,9 +34,9 @@
 - **JSON Example:**
 ```json
 {
-  "username": "example",
-  "password": "password123",
-  "email": "example@example.com"
+    "username": "Dani",
+    "password": "password",
+    "email": "danidev@gmail.com"
 }
   ```
 
