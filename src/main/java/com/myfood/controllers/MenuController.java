@@ -50,6 +50,17 @@ public class MenuController {
 		return ResponseEntity.ok(menuPage);
 	}
 
+	/**
+	 * Retrieves all visible menus.
+	 * 
+	 * This endpoint fetches all menus from the menu service and filters them based on visibility.
+	 * Visible menus are determined by the {@link #isMenuVisible(Menu)} method. The filtered list
+	 * is then returned in a ResponseEntity. If no visible menus are found, a 404 Not Found response
+	 * is returned; otherwise, a 200 OK response with the list of visible menus is sent.
+	 *
+	 * @return ResponseEntity<List<Menu>> A response entity containing the list of visible menus
+	 *         if they exist, or a 404 Not Found response if no visible menus are available.
+	 */
 	@GetMapping("/allVisibleMenus")
 	public ResponseEntity<List<Menu>> getAllVisibleMenus() {
 		List<Menu> visibleMenus = menuService.getAllMenus()
@@ -60,14 +71,15 @@ public class MenuController {
 		return visibleMenus.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(visibleMenus);
 	}
 
-	//TODO test in postman
+	
 	private boolean isMenuVisible(Menu menu) {
 	    boolean isMenuVisible = menu.isVisible();
 	    boolean areAllDishesVisible = areAllDishesVisible(Arrays.asList(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert()));
 
 	    return isMenuVisible && areAllDishesVisible;
 	}
-	//TODO test in postman
+	
+	
 	private boolean areAllDishesVisible(List<Dish> dishes) {
 	    for (Dish dish : dishes) {
 	        if (dish == null || !dish.isVisible()) {
@@ -101,6 +113,7 @@ public class MenuController {
 	 * @param entity The menu to be created.
 	 * @return ResponseEntity containing the created menu.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/menu")
 	public ResponseEntity<Menu> saveMenu(@RequestBody Menu entity) {
 		return ResponseEntity.ok(menuService.createMenu(entity));
@@ -140,6 +153,7 @@ public class MenuController {
 	 * @return ResponseEntity indicating success or a 404 response if the menu is
 	 *         not found.
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/menu/changeVisibility/{id}")
 	public ResponseEntity<?> toggleMenuVisibility(@PathVariable(name = "id") Long id) {
 		Optional<Menu> existingMenu = menuService.getOneMenu(id);
