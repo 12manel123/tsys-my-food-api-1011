@@ -68,18 +68,18 @@ public class WebSecurityConfig {
 	
 	
 	// CORS Configuration Bean
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.addAllowedOrigin("*"); // Allow all origins or Arrays.asList("http://localhost:4200","http://localhost:3000")
-		configuration.addAllowedMethod("*"); // Allow all methods or List.of("GET", "POST", "PUT", "DELETE")
-		configuration.addAllowedHeader("*"); // Allow all headers
-		configuration.setAllowCredentials(true); // Allow sending of authentication cookies
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
-	}
+//	@Bean
+//	CorsConfigurationSource corsConfigurationSource() {
+//
+//		CorsConfiguration configuration = new CorsConfiguration();
+//		configuration.addAllowedOrigin("*"); // Allow all origins or Arrays.asList("http://localhost:4200","http://localhost:3000")
+//		configuration.addAllowedMethod("*"); // Allow all methods or List.of("GET", "POST", "PUT", "DELETE")
+//		configuration.addAllowedHeader("*"); // Allow all headers
+//		configuration.setAllowCredentials(true); // Allow sending of authentication cookies
+//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", configuration);
+//		return source;
+//	}
 	
 	private final String AUTH_ORIGINS = Arrays.asList(
 	        "http://myfood.up.railway.app/",
@@ -91,23 +91,23 @@ public class WebSecurityConfig {
 	
 	
 	
-//	@Bean
-//	WebMvcConfigurer corsConfig() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/**").allowedOrigins("*").allowedHeaders("*").allowedMethods("*");
-//
-//			}
-//		};
-//	}
+	@Bean
+	WebMvcConfigurer corsConfig() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins("*").allowedHeaders("*").allowedMethods("*");
+
+			}
+		};
+	}
     
 
     // Security Filter Chain
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http ,  AuthenticationManager authenticationManager) throws Exception {
 
-      return  http.cors(cors -> corsConfigurationSource())                            
+      return  http.cors(cors -> corsConfig())                            
         .csrf(csrf -> csrf.disable())                                                            
         .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
