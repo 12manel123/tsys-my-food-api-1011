@@ -5,7 +5,7 @@
 Welcome to the documentation for the Tsys My Food API. Below, you'll find information on how to navigate and use the available resources.
 
 - [**Javadoc**](https://12manel123.github.io/tsys-my-food-api-1011): Explore comprehensive information about all controllers.
-- [**Postman**](https://12manel123.github.io/tsys-my-food-api-1011): Test API requests conveniently using Postman.
+- [**Postman**](https://documenter.getpostman.com/view/23174140/2s9Ykhgj5p): See the API documentation in postman.
 <hr>
 
 # Authentication Controller
