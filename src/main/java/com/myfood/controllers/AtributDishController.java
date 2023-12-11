@@ -161,12 +161,16 @@ public class AtributDishController {
 
 	        List<Dish> relatedDishes = atribut_DishService.getDishesByAtribut(atribut);
 
-	        if (!relatedDishes.isEmpty()) {
-	            int start = (int) pageable.getOffset();
-	            int end = Math.min((start + pageable.getPageSize()), relatedDishes.size());
+	        List<Dish> visibleDishes = relatedDishes.stream()
+	                .filter(Dish::isVisible)
+	                .collect(Collectors.toList());
 
-	            List<Dish> paginatedDishes = relatedDishes.subList(start, end);
-	            Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, relatedDishes.size());
+	        if (!visibleDishes.isEmpty()) {
+	            int start = (int) pageable.getOffset();
+	            int end = Math.min((start + pageable.getPageSize()), visibleDishes.size());
+
+	            List<Dish> paginatedDishes = visibleDishes.subList(start, end);
+	            Page<Dish> dishPage = new PageImpl<>(paginatedDishes, pageable, visibleDishes.size());
 
 	            return ResponseEntity.ok(dishPage);
 	        } else {
@@ -176,6 +180,7 @@ public class AtributDishController {
 	        return ResponseEntity.badRequest().body("Error,Invalid attribute. Accepted values are: CELIAC, LACTOSE, VEGAN, VEGETARIAN, NUTS");
 	    }
 	}
+
 	
 	/**
 	 * Add an existing attribute-dish relationship to a dish.
