@@ -28,9 +28,10 @@ public class OpenApi30Config {
     @Bean
     OpenAPI customOpenAPI() {
         return new OpenAPI().addServersItem(new Server().url("http://myfood.up.railway.app/"))
+                .addServersItem(new Server().url("https://myfood.up.railway.app/"))
                 .addServersItem(new Server().url("http://localhost:8181"));
     }
-
+    
 }
 
 
