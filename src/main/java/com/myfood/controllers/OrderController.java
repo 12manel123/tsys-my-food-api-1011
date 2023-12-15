@@ -34,6 +34,7 @@ import com.myfood.services.UserServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("api/v1")
@@ -56,21 +57,22 @@ public class OrderController {
      * @return ResponseEntity containing a paginated list of {@link OrderUserDTO}.
      * @see OrderService#getAllOrdersWithPagination(Pageable)
      */
-	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Endpoint for CHEF and ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("hasRole('CHEF') or hasRole('ADMIN')")
     @GetMapping("/orders")
-    public ResponseEntity<Page<OrderUserDTO>> getAllOrders(
+    public ResponseEntity<Page<OrderCookDTO>> getAllOrdersWithDish(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        List<Order> allOrders = orderService.getAllOrders();
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Order> paginatedOrders = paginate(allOrders, pageable);
-
-        List<OrderUserDTO> orderUserDTOList = paginatedOrders.getContent().stream()
-                .map(order -> new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot(),order.getTotalPrice(),order.getActualDate()))
+            @RequestParam(defaultValue = "8") int size) {
+        List<Order> ordersForCook = orderService.getAllOrders();
+        List<Order> filteredOrders = ordersForCook.stream()
+                .filter(order -> order.getActualDate() != null)
                 .collect(Collectors.toList());
-
-        return ResponseEntity.ok(new PageImpl<>(orderUserDTOList, pageable, paginatedOrders.getTotalElements()));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> paginatedOrders = paginate(filteredOrders, pageable);
+        List<OrderCookDTO> orderCookDTOList = paginatedOrders.getContent().stream()
+                .map(this::mapToOrderCookDTOWithDishes)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new PageImpl<>(orderCookDTOList, pageable, filteredOrders.size()));
     }
 
     /**
@@ -156,6 +158,9 @@ public class OrderController {
             return createErrorResponse("The order not exists", HttpStatus.BAD_REQUEST);
         }
     }
+	
+	
+	
 
     /**
      * Retrieves a paginated list of orders suitable for a cook, including
@@ -293,6 +298,7 @@ public class OrderController {
      * @see #calculateTotalPrice(Order)
      * @see OrderUserDTO
      */
+	@Transactional
 	@Operation(summary = "Endpoint for USER", security = @SecurityRequirement(name = "bearerAuth"))
     @PutMapping("/order/finish/{orderId}/{slotId}")
     public ResponseEntity<?> updateOrderSlot(
