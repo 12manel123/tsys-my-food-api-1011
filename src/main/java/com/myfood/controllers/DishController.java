@@ -46,13 +46,24 @@ public class DishController {
 	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/dishes")
-    public ResponseEntity<Page<Dish>> getAllDishes(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Dish> dishPage = dishService.getAllDishesWithPagination(pageable);
-        return ResponseEntity.ok(dishPage);
-    }
+	public ResponseEntity<Page<Dish>> getAllDishes(
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size) {
+	    Pageable pageable = PageRequest.of(page, size);
+	    Page<Dish> dishPage = dishService.getAllDishesWithPagination(pageable);
+
+	    List<Dish> modifiedDishList = dishPage.getContent().stream()
+	            .map(dish -> {
+	                dish.getAttributes();
+	                return dish;
+	            })
+	            .collect(Collectors.toList());
+
+	    Page<Dish> modifiedDishPage = new PageImpl<>(modifiedDishList, pageable, dishPage.getTotalElements());
+
+	    return ResponseEntity.ok(modifiedDishPage);
+	}
+ 
 	
 	@Operation(summary = "Endpoint USER", security = @SecurityRequirement(name = "bearerAuth"))
 	@GetMapping("/dishes/visible")
