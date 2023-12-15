@@ -57,8 +57,8 @@ public class OrderController {
      * @return ResponseEntity containing a paginated list of {@link OrderUserDTO}.
      * @see OrderService#getAllOrdersWithPagination(Pageable)
      */
-    @Operation(summary = "Endpoint for CHEF and ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("hasRole('CHEF') or hasRole('ADMIN')")
+    @Transactional
+    @Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/orders")
     public ResponseEntity<Page<OrderCookDTO>> getAllOrdersWithDish(
             @RequestParam(defaultValue = "0") int page,
