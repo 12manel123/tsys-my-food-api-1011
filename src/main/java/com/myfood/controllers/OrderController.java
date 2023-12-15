@@ -197,6 +197,8 @@ public class OrderController {
         orderCookDTO.setOrderId(order.getId());
         orderCookDTO.setMaked(order.isMaked());
         orderCookDTO.setSlot(order.getSlot());
+        orderCookDTO.setActualDate(order.getActualDate());
+        orderCookDTO.setTotalPrice(order.getTotalPrice());
         List<ListOrder> listOrders = order.getListOrder();
         List<Dish> dishDTOList = listOrders.stream()
                 .map(this::mapToListOrderDishDTO)
