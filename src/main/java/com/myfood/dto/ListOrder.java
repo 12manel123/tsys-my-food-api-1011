@@ -1,5 +1,6 @@
 package com.myfood.dto;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ public class ListOrder {
 	@JoinColumn(name = "dish_id")
 	private Dish dish;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "order_id")
 	private Order order;
 	
