@@ -50,7 +50,7 @@ public class OrderController {
     private UserServiceImpl userService;
 
     /**
-     * Retrieves a paginated list of user orders. It's for the ADMIN
+     * Retrieves a paginated list of user orders with Dishes. It's for the ADMIN
      *
      * @param page The page number (default is 0).
      * @param size The number of orders per page (default is 10).
