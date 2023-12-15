@@ -146,12 +146,16 @@ public class OrderController {
      * @see OrderService#getOneOrder(Long)
      * @see OrderService#deleteOrder(Long)
      */
+	@Transactional
 	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/order/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable(name = "id") Long id) {
         Optional<Order> entity = orderService.getOneOrder(id);
         if (entity.isPresent()) {
+            Order order = entity.get();
+            order.setActualDate(null);
+            order.setSlot(null);
             orderService.deleteOrder(id);
             return ResponseEntity.status(204).body(Map.of("Message", "Order deleted"));
         } else {
