@@ -303,8 +303,7 @@ public class DishController {
 			Dish dishToUpdate = existingDish.get();
 			dishToUpdate.setVisible(!dishToUpdate.isVisible());  
 			dishService.updateDish(dishToUpdate);
-			String visibilityStatus = dishToUpdate.isVisible() ? "visible" : "not visible";
-			return ResponseEntity.ok("Dish with ID " + id + " changed as " + visibilityStatus);
+			return ResponseEntity.ok("");
 		} else {
 			rest.put("Error", "Dish with ID " + id + " not found");
 			return ResponseEntity.status(404).body(rest);
