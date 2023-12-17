@@ -207,7 +207,7 @@ public class AtributDishController {
             dish.get().getAtribut_dish().add(atributDish.get());
             dishService.updateDish(dish.get());
 
-            return ResponseEntity.ok("The Atribut_Dish added to Dish successfully.");
+            return ResponseEntity.ok("");
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -265,7 +265,7 @@ public class AtributDishController {
             dish.get().getAtribut_dish().remove(atributDish.get());
             dishService.updateDish(dish.get());
 
-            return ResponseEntity.ok("Relationship between Attribute and Dish deleted successfully.");
+            return ResponseEntity.ok("");
             
         } else {
             return ResponseEntity.notFound().build();
