@@ -164,7 +164,7 @@ public class DishController {
 	 */
 	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/dishes/byCategory/{category}")
+	@GetMapping("/dishes/	/{category}")
 	public ResponseEntity<?> getDishesByCategory(
 	        @PathVariable(name = "category") String category,
 	        @RequestParam(defaultValue = "0") int page,
