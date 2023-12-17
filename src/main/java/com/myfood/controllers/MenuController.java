@@ -21,6 +21,7 @@ import com.myfood.services.MenuServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.transaction.Transactional;
 
 /**
  * Controller class for handling menu-related operations.
@@ -136,6 +137,7 @@ public class MenuController {
 	 */
 	@Operation(summary = "Endpoint ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
+	@Transactional
 	@PutMapping("/menu/{id}")
 	public ResponseEntity<Menu> updateMenu(@PathVariable(name = "id") Long id, @RequestBody Menu entity) {
 		
@@ -173,7 +175,7 @@ public class MenuController {
 			menuToUpdate.setVisible(!menuToUpdate.isVisible());
 			menuService.updateMenu(menuToUpdate);
 			String visibilityStatus = menuToUpdate.isVisible() ? "visible" : "not visible";
-			return ResponseEntity.ok("Menu visibility status with ID " + id + " changed to " + visibilityStatus);
+			return ResponseEntity.ok("");
 
 		} else {
 
@@ -197,7 +199,7 @@ public class MenuController {
 		Optional<Menu> entity = menuService.getOneMenu(id);
 		if (entity.isPresent()) {
 			menuService.deleteMenu(id);
-			return ResponseEntity.ok("The menu with "+id+", is deleted");		
+			return ResponseEntity.ok("");		
 			} 
 		else {
 			return ResponseEntity.notFound().build();
