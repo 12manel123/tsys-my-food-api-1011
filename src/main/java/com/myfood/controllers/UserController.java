@@ -91,7 +91,7 @@ public class UserController {
 	 * @return ResponseEntity containing the requested UserDTO or a 404 response if not found.
 	 */
 	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	@GetMapping("/user/{id}")
 	public ResponseEntity<?> getOneUser(@PathVariable(name = "id") Long id ,  Authentication authentication) {
 		   Optional<User> entity = userServ.getOneUser(id);
