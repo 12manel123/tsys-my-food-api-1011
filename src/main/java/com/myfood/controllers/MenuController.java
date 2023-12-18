@@ -124,6 +124,12 @@ public class MenuController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/menu")
 	public ResponseEntity<Menu> saveMenu(@RequestBody Menu entity) {
+		
+		entity.getAppetizer().setPrice(2.45);
+		entity.getFirst().setPrice(2.45);
+		entity.getSecond().setPrice(2.45);
+		entity.getDessert().setPrice(2.45);
+		
 		return ResponseEntity.ok(menuService.createMenu(entity));
 	}
 
