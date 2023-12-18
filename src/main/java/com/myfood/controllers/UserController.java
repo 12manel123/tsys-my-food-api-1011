@@ -94,16 +94,17 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/user/{id}")
 	public ResponseEntity<?> getOneUser(@PathVariable(name = "id") Long id ,  Authentication authentication) {
+		   Optional<User> entity = userServ.getOneUser(id);
 		
 		   UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		    
 			 
-		    if (!userDetails.getUsername().equals(id.toString()) && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+		    if (!userDetails.getUsername().equals(entity.get().getUsername()) && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
 		        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to edit this profile.");
 		    }
 			
 
-		Optional<User> entity = userServ.getOneUser(id);
+		
 		if (entity.isPresent()) {
 
 			UserDTO userListDTO = new UserDTO.Builder()
@@ -161,17 +162,18 @@ public class UserController {
 	@PutMapping("/user/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id ,@RequestBody User entity , Authentication authentication) {	
 		
+		Optional<User> entityOld = userServ.getOneUser(id);
 		
 	    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 	    
 	 
-	    if (!userDetails.getUsername().equals(id.toString()) && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+	    if (!userDetails.getUsername().equals(entityOld.get().getUsername()) && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
 	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to edit this profile.");
 	    }
 		
 		
 		
-		Optional<User> entityOld = userServ.getOneUser(id);
+		
 		
 			
 		if (entityOld.isPresent()) {
