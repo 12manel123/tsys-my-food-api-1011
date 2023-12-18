@@ -17,8 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +39,6 @@ import com.myfood.services.RolServiceImpl;
 import com.myfood.services.UserServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 /**
@@ -90,7 +93,15 @@ public class UserController {
 	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/user/{id}")
-	public ResponseEntity<UserDTO> getOneUser(@PathVariable(name = "id") Long id) {
+	public ResponseEntity<?> getOneUser(@PathVariable(name = "id") Long id ,  Authentication authentication) {
+		
+		   UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		    
+			 
+		    if (!userDetails.getUsername().equals(id.toString()) && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+		        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to edit this profile.");
+		    }
+			
 
 		Optional<User> entity = userServ.getOneUser(id);
 		if (entity.isPresent()) {
@@ -146,9 +157,19 @@ public class UserController {
 	 * @return ResponseEntity indicating success or a 404 response if not found.
 	 */
 	@Operation(summary = "Endpoint for ADMIN", security = @SecurityRequirement(name = "bearerAuth"))
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	@PutMapping("/user/{id}")
-	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id ,@RequestBody User entity) {		
+	public ResponseEntity<?> updateUser(@PathVariable(name = "id") Long id ,@RequestBody User entity , Authentication authentication) {	
+		
+		
+	    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+	    
+	 
+	    if (!userDetails.getUsername().equals(id.toString()) && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to edit this profile.");
+	    }
+		
+		
 		
 		Optional<User> entityOld = userServ.getOneUser(id);
 		
