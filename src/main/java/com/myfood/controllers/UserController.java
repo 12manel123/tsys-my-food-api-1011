@@ -99,7 +99,7 @@ public class UserController {
 		   UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		    
 			 
-		    if (!userDetails.getUsername().equals(entity.get().getUsername()) || !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+		    if (!userDetails.getUsername().equals(entity.get().getUsername()) && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
 		        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to edit this profile.");
 		    }
 			
@@ -167,12 +167,9 @@ public class UserController {
 	    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 	    
 	 
-	    if (!userDetails.getUsername().equals(entityOld.get().getUsername()) || !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+	    if (!userDetails.getUsername().equals(entityOld.get().getUsername()) && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
 	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to edit this profile.");
 	    }
-		
-		
-		
 		
 		
 			
