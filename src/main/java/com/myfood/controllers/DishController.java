@@ -323,7 +323,7 @@ public class DishController {
 		Optional<Dish> entity = dishService.getOneDish(id);
 		if (entity.isPresent()) {
 			dishService.deleteDish(id);
-			return ResponseEntity.ok("The dish with "+id+", is deleted");		
+			return ResponseEntity.ok("");		
 			} 
 		else {
 			return ResponseEntity.notFound().build();
