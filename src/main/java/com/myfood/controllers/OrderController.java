@@ -332,11 +332,14 @@ public class OrderController {
     }
 
     private Double calculateTotalPrice(Order order) {
+    	
         List<ListOrder> listOrders = order.getListOrder();
+        
         List<Dish> dishes = listOrders.stream()
                 .map(ListOrder::getDish)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+        
         List<Dish> menuDishes = listOrders.stream()
                 .map(listOrder -> listOrder.getMenu())
                 .filter(Objects::nonNull)
@@ -344,11 +347,15 @@ public class OrderController {
                         .asList(menu.getAppetizer(), menu.getFirst(), menu.getSecond(), menu.getDessert()).stream())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+        
         List<Dish> allDishes = new ArrayList<>(dishes);
         allDishes.addAll(menuDishes);
+        allDishes.addAll(dishes);
+      
         Double totalPrice = allDishes.stream()
                 .mapToDouble(Dish::getPrice)
                 .sum();
+        
         return totalPrice;
     }
 
