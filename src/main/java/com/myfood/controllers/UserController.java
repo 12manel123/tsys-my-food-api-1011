@@ -171,7 +171,6 @@ public class UserController {
 	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to edit this profile.");
 	    }
 		
-		
 			
 		if (entityOld.isPresent()) {
 			
@@ -182,18 +181,14 @@ public class UserController {
 				entity.setRole(roleService.findByName(rolName).get());
 			}
 			
-	
+			entity.setUsername(entityOld.get().getUsername());
 			entity.setPassword(entityOld.get().getPassword());
 			entity.setId(id);
 			ZoneId madridZone = ZoneId.of("Europe/Madrid");
 			entity.setUpdatedAt(LocalDateTime.now(madridZone));
 			userServ.updateUser(entity);
 	
-			// Required attributes
-			entity.setUsername(entityOld.get().getUsername());
-			entity.setUsername(entityOld.get().getEmail());
 			
-					
 			Map<String, Object> responseData = new HashMap<String, Object>();
 			responseData.put("updated user", entity.getUsername());
 			return ResponseEntity.ok(responseData);

@@ -276,7 +276,7 @@ public class DishController {
 			existDish.get().setImage(entity.getImage());
 			existDish.get().setName(entity.getName());
 			existDish.get().setPrice(entity.getPrice());
-			existDish.get().setVisible(false);
+			existDish.get().setVisible(entity.isVisible());
 				
 			return ResponseEntity.ok(dishService.updateDish(existDish.get()));
 		}
