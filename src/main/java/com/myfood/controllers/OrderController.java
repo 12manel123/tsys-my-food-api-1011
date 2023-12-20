@@ -360,8 +360,7 @@ public class OrderController {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         
-        List<Dish> allDishes = new ArrayList<>(dishes);
-        allDishes.addAll(menuDishes);
+        List<Dish> allDishes = new ArrayList<>(menuDishes);
         allDishes.addAll(dishes);
       
         Double totalPrice = allDishes.stream()
@@ -369,6 +368,47 @@ public class OrderController {
                 .sum();
         
         return totalPrice;
+    }
+    
+    
+    @Transactional
+	@Operation(summary = "Endpoint for USER", security = @SecurityRequirement(name = "bearerAuth"))
+    @PutMapping("/order/finish/{orderId}/{slotId}/{price}")
+    public ResponseEntity<?> updateOrderSlotPrice(
+            @PathVariable(name = "orderId") Long orderId,
+            @PathVariable(name = "slotId") Long slotId,
+            @PathVariable(name = "price") Double price) {
+        Optional<Order> optionalOrder = orderService.getOneOrder(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            if (order.getActualDate() != null) {
+                return createErrorResponse("Order is confirmed previously", HttpStatus.BAD_REQUEST);
+            }
+            if (order.getListOrder() == null || order.getListOrder().isEmpty()) {
+                return createErrorResponse("Order must have at least one ListOrder associated", HttpStatus.BAD_REQUEST);
+            }
+            Optional<Slot> slotOptional = slotService.getOneSlot(slotId);
+            if (slotOptional.isPresent()) {
+                Slot slot = slotOptional.get();
+                if (slot.getActual() >= slot.getLimitSlot()) {
+                    return createErrorResponse("Too many orders for this slot to create order", HttpStatus.BAD_REQUEST);
+                }
+                Double totalPrice = price;
+                ZoneId madridZone = ZoneId.of("Europe/Madrid");
+                order.setActualDate(LocalDateTime.now(madridZone));
+                order.setSlot(slot);
+                order.setTotalPrice(totalPrice);
+                slot.setActual(slot.getActual() + 1);
+                orderService.updateOrder(order);
+                slotService.updateSlot(slot);
+                OrderUserDTO orderUserDTO = new OrderUserDTO(order.getId(), order.isMaked(), order.getSlot(),order.getTotalPrice(),order.getActualDate());
+                return ResponseEntity.accepted().body(orderUserDTO);
+            } else {
+                return createErrorResponse("The slot not exists", HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return createErrorResponse("The order not exists", HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
