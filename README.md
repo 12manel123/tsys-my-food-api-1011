@@ -5,6 +5,7 @@
 Welcome to the documentation for the Tsys My Food API. Below, you'll find information on how to navigate and use the available resources.
 
 - [**Javadoc**](https://12manel123.github.io/tsys-my-food-api-1011): Explore comprehensive information about all controllers.
+- [**Swagger**](https://myfood.up.railway.app/swagger-ui/index.html): You can try the routes with swagger
 - [**Postman**](https://documenter.getpostman.com/view/23174140/2s9Ykhgj5p): See the API documentation in postman.
 <hr>
 
